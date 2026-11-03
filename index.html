@@ -188,7 +188,8 @@ details.more[open]>summary{margin-bottom:8px}
 .dialog .db{padding:14px;display:grid;gap:12px}
 .relpick{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:end}
 .relpick .mid{font-size:22px;color:var(--c-rel);font-weight:700;padding-bottom:6px;text-align:center}
-@media (max-width:560px){.relpick{grid-template-columns:1fr}.relpick .mid{transform:rotate(-90deg)}}
+@media (max-width:560px){.relpick{grid-template-columns:1fr}.relpick .mid{padding:0;font-size:18px}}
+@media (max-width:520px){.qbe th{width:62px;padding:6px}.qbe td{min-width:92px;padding:5px}.qbe td input,.qbe td select{padding:4px 2px}}
 
 /* form view */
 .aform{border:1px solid var(--line-2);border-radius:10px;overflow:hidden;max-width:620px}
@@ -419,7 +420,7 @@ const TASKS = [
   {tab:'forms', name:'النماذج', title:'أدخلي البيانات بالنماذج', check:()=>totalRows()>=10, body:`اخترعي 4 نكهات بأسعارها، وسجّلي 3 زبونات، ثم أدخلي طلبات لهن.
     في نموذج الطلبات تختارين اسم الزبونة والنكهة من قائمة، وهذا بفضل العلاقة.`},
   {tab:'queries', name:'الاستعلامات', title:'صمّمي استعلامًا', check:()=>q('SELECT COUNT(*) n FROM _queries')[0].n>=1, body:`أظهري الجداول الثلاثة، واختاري الحقول: الاسم، اسم_المنتج، الكمية.
-    تحت <b>الكمية</b> اكتبي في المعايير <b>&gt;=3</b> واختاري الفرز <b>تنازلي</b>. شغّليه ❗ ثم احفظيه باسم «الطلبات الكبيرة».`},
+    تحت <b>الكمية</b> اكتبي في المعايير <bdi dir="ltr"><b>&gt;=3</b></bdi> واختاري الفرز <b>تنازلي</b>. شغّليه ❗ ثم احفظيه باسم «الطلبات الكبيرة».`},
   {tab:'reports', name:'التقارير', title:'أنشئي تقريرًا', check:()=>q('SELECT COUNT(*) n FROM _reports')[0].n>=1, body:`المصدر: جدول الطلبات. التجميع حسب: رقم_المنتج.
     الملخص: مجموع الكمية. سمّيه «مبيعات كل نكهة»، واكتشفي النكهة الأكثر مبيعًا!`},
 ];
@@ -507,7 +508,7 @@ function vRels(){
 }
 function drawRels(){
   const cv = $('#relCanvas'), svg = $('#relLines'); if (!cv || !svg) return;
-  const base = cv.getBoundingClientRect(); let out = '';
+  const base = cv.getBoundingClientRect(); let out = '', lane = 0;
   rels().forEach(r => {
     const pb = cv.querySelector(`.flbox[data-tbl="${CSS.escape(r.parent)}"]`), cb = cv.querySelector(`.flbox[data-tbl="${CSS.escape(r.child)}"]`);
     if (!pb || !cb) return;
@@ -515,9 +516,11 @@ function drawRels(){
     const P = pb.getBoundingClientRect(), C = cb.getBoundingClientRect(), pr = pl.getBoundingClientRect(), cr = cl.getBoundingClientRect();
     const py = pr.top + pr.height/2 - base.top, cy = cr.top + cr.height/2 - base.top;
     let x1, x2, d;
-    if (Math.abs(P.left - C.left) < 40){ // stacked vertically: loop out on the left side
-      x1 = P.left - base.left; x2 = C.left - base.left; const ox = Math.min(x1,x2) - 26;
+    if (Math.abs(P.left - C.left) < 40){ // stacked vertically: loop out on the left side, one lane per relation
+      x1 = P.left - base.left; x2 = C.left - base.left; const ox = Math.min(x1,x2) - 22 - 26*(lane++);
       d = `M${x1} ${py} C${ox} ${py} ${ox} ${cy} ${x2} ${cy}`;
+      out += `<path d="${d}" data-rel="${r.id}"/><text x="${x1-14}" y="${py-5}">1</text><text x="${x2-18}" y="${cy+16}">∞</text>`;
+      return;
     } else {
       const pRight = P.left > C.left; x1 = (pRight ? P.left : P.right) - base.left; x2 = (pRight ? C.right : C.left) - base.left;
       const mx = (x1 + x2)/2; d = `M${x1} ${py} C${mx} ${py} ${mx} ${cy} ${x2} ${cy}`;
@@ -614,7 +617,7 @@ function vQueries(){
    ${B.tables.length?`
    <div class="lbl">٢. اختاري الحقول من مربعات الجداول</div>
    <div class="qtop">${B.tables.map(t=>`<div class="flbox"><div class="fh">${ico('table','rgba(255,255,255,.4)')}${esc(t)}</div><div style="padding:4px 0">${fields(t).map(f=>`<label><input type="checkbox" class="qf" data-act="qbFields" value="${esc(kOf(t,f.name))}" ${B.fields.includes(kOf(t,f.name))?'checked':''}>${f.pk?ico('key'):''}${esc(f.name)}</label>`).join('')}</div></div>`).join('')}</div>
-   ${keys.length?`<div class="lbl">٣. شبكة التصميم: اختاري الفرز، واكتبي المعايير (مثل <b dir="ltr">&gt;=3</b> أو <b>لوتس</b> أو <b>*شوكولاتة*</b>)</div>
+   ${keys.length?`<div class="lbl">٣. شبكة التصميم: اختاري الفرز، واكتبي المعايير (مثل <bdi dir="ltr"><b>&gt;=3</b></bdi> أو <b>لوتس</b> أو <b>*شوكولاتة*</b>)</div>
    <div class="gridwrap"><table class="grid qbe"><tbody>
     <tr><th>الحقل</th>${keys.map(k=>`<td class="fname">${esc(JSON.parse(k)[1])}</td>`).join('')}</tr>
     <tr><th>الجدول</th>${keys.map(k=>`<td>${esc(JSON.parse(k)[0])}</td>`).join('')}</tr>
