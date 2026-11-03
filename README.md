@@ -12,4 +12,6 @@
 
 **رابط التطبيق:** https://ammaal20131-prog.github.io/cupcake-store/
 
+**دليل الطالبة بالصور:** https://ammaal20131-prog.github.io/cupcake-store/guide.pdf
+
 البيانات تُحفظ على جهاز كل طالبة فقط.
