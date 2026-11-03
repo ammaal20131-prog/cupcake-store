@@ -1,0 +1,711 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>متجر الكب كيك</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Reem+Kufi:wght@600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: phone app, RTL, five bottom tabs mirroring Access objects (tables, relationships, forms, queries, reports); a task card on top of each tab guides the student */
+:root{
+  --bg:#f5f3f4; --surface:#ffffff; --ink:#2a1d23; --muted:#6f6067; --line:#e2dadd;
+  --accent:#9a2f55; --accent-ink:#ffffff; --soft:#f3e6eb; --ok:#2f7a4f; --ok-bg:#e5f3ea; --warn:#b4530a; --warn-bg:#fdf0e3;
+  --code-bg:#24161c; --code-fg:#f1d9e2; --paper:#ffffff;
+  --f-display:"Reem Kufi","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans Arabic",system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#151012; --surface:#1f181b; --ink:#f0e6ea; --muted:#a9979e; --line:#3a2e33;
+  --accent:#e77fa3; --accent-ink:#1d0d14; --soft:#33222a; --ok:#7fd3a0; --ok-bg:#183323; --warn:#f0a65a; --warn-bg:#33240f;
+  --code-bg:#0e0a0c; --code-fg:#f1d9e2; --paper:#1b1517; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#151012; --surface:#1f181b; --ink:#f0e6ea; --muted:#a9979e; --line:#3a2e33;
+  --accent:#e77fa3; --accent-ink:#1d0d14; --soft:#33222a; --ok:#7fd3a0; --ok-bg:#183323; --warn:#f0a65a; --warn-bg:#33240f;
+  --code-bg:#0e0a0c; --code-fg:#f1d9e2; --paper:#1b1517; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:14px calc(86px + env(safe-area-inset-bottom,0px))}
+.wrap{max-width:600px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+header{display:flex;align-items:center;justify-content:space-between;gap:8px}
+h1{font-family:var(--f-display);font-size:24px;margin:0}
+h2{font-family:var(--f-display);font-size:19px;margin:0}
+h3{font-size:15px;margin:0}
+.progress{display:flex;gap:4px}
+.progress i{width:18px;height:6px;border-radius:3px;background:var(--line)}
+.progress i.on{background:var(--ok)}
+.task{background:var(--soft);border-radius:14px;padding:10px 14px}
+.task summary{cursor:pointer;font-weight:600;display:flex;gap:8px;align-items:center;flex-wrap:wrap;list-style:none}
+.task summary::-webkit-details-marker{display:none}
+.stepn{font-size:12px;font-weight:500;color:var(--accent);letter-spacing:.02em}
+.task .st{margin-inline-start:auto;font-size:13px;color:var(--ok)}
+.task .tb{font-size:14px;margin-top:6px}
+.task ul{margin:4px 0;padding-inline-start:20px}
+.task.done{background:var(--ok-bg)}
+code,.mono{font-family:var(--f-mono);font-size:.9em}
+input,select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%;min-width:0}
+input[type=checkbox],input[type=radio]{width:auto;accent-color:var(--accent)}
+input:focus,select:focus,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+button{font:inherit;font-weight:600;border:0;border-radius:10px;padding:9px 14px;cursor:pointer;background:var(--accent);color:var(--accent-ink)}
+button.ghost{background:var(--soft);color:var(--ink);font-weight:500}
+button.small{padding:5px 10px;font-size:13px}
+button.danger{background:var(--warn-bg);color:var(--warn)}
+button.link{background:none;color:var(--accent);padding:4px 0;font-weight:500}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:10px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.grow{flex:1;min-width:0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.three{display:grid;grid-template-columns:1.3fr .9fr 1fr;gap:6px}
+.list{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.item{display:flex;gap:10px;align-items:center;padding:12px 14px;border-top:1px solid var(--line)}
+.item:first-child{border-top:0}
+.item .main{flex:1;min-width:0}
+.item .t{font-weight:600}
+.item .s{font-size:13px;color:var(--muted)}
+.badge{font-size:11px;padding:1px 7px;border-radius:99px;background:var(--soft);color:var(--accent);white-space:nowrap}
+.empty{padding:18px;color:var(--muted);text-align:center;font-size:14px}
+.msg{font-size:14px;color:var(--ok)} .msg.err{color:var(--warn)}
+.lbl{font-size:12px;color:var(--muted)}
+.frow{display:grid;grid-template-columns:1fr 7.5em auto auto;gap:6px;align-items:center}
+.pk{font-size:12px;display:flex;gap:3px;align-items:center;white-space:nowrap}
+.tablebox{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{font-weight:600;color:var(--muted);background:var(--soft)}
+.sql{background:var(--code-bg);color:var(--code-fg);font-family:var(--f-mono);font-size:12px;border-radius:10px;padding:10px 12px;direction:ltr;text-align:left;white-space:pre;overflow-x:auto}
+.rel{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ent{border:1px solid var(--line);border-radius:10px;padding:6px 10px;background:var(--bg)}
+.ent b{display:block;font-size:14px}
+.ent span{font-size:12px;color:var(--muted)}
+.card-n{font-family:var(--f-mono);font-size:12px;color:var(--accent)}
+.chk{display:flex;flex-wrap:wrap;gap:6px}
+.chk label{display:flex;gap:5px;align-items:center;font-size:13px;background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:4px 10px}
+.formf{display:grid;gap:4px}
+.formf label{font-size:13px;color:var(--muted)}
+.nav-rec{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.paper{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px 16px;display:grid;gap:14px}
+.paper .ph{border-bottom:2px solid var(--ink);padding-bottom:10px;display:grid;gap:2px}
+.paper .ph h2{font-size:22px}
+.paper .grp h3{color:var(--accent);margin-bottom:4px}
+.paper table{font-size:13px}
+.paper .sum td{font-weight:600;background:var(--soft)}
+.grand{border-top:2px solid var(--ink);padding-top:8px;font-weight:600;display:flex;justify-content:space-between}
+nav{position:fixed;inset:auto 0 0 0;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);
+  padding:6px max(4px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(4px,env(safe-area-inset-left,0px));z-index:5}
+nav button{background:none;color:var(--muted);font-weight:500;font-size:12px;padding:6px 2px;display:flex;flex-direction:column;align-items:center;gap:2px}
+nav button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
+nav button[aria-current="true"]{color:var(--accent)}
+#loading{padding:40px;text-align:center;color:var(--muted)}
+@media (max-width:380px){.frow{grid-template-columns:1fr 6.5em auto auto}}
+</style>
+
+<div class="wrap" dir="rtl">
+  <header><h1 id="storeTitle">متجر الكب كيك 🧁</h1><div class="progress" id="prog" aria-label="تقدّم المشروع"></div></header>
+  <div class="two"><input id="stuName" placeholder="اسم الطالبة" aria-label="اسم الطالبة"><input id="stuStore" placeholder="اسم متجري" aria-label="اسم المتجر"></div>
+  <div class="row"><button class="small" data-tab="send">ورقة العمل والإرسال</button><button class="small ghost" id="galBtn" data-tab="gallery" hidden>معرض المتاجر ⭐</button><button class="small ghost" id="teachBtn" data-tab="teacher" hidden>لوحة المعلمة</button></div>
+  <div id="loading">جارٍ تجهيز قاعدة البيانات…</div>
+  <main id="app" class="wrap" style="width:100%"></main>
+</div>
+
+<nav dir="rtl">
+  <button data-tab="tables" aria-current="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 9v11"/></svg>الجداول</button>
+  <button data-tab="rels"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="8" height="7" rx="1.5"/><rect x="14" y="13" width="8" height="7" rx="1.5"/><path d="M10 7.5h3a2 2 0 0 1 2 2V13"/></svg>العلاقات</button>
+  <button data-tab="forms"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h4"/></svg>النماذج</button>
+  <button data-tab="queries"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg>الاستعلامات</button>
+  <button data-tab="reports"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M9 17v-3M12 17v-6M15 17v-4"/></svg>التقارير</button>
+</nav>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-asm.js"></script>
+<script>
+let SQL, db;
+const KEY = 'cupcake-db-v1';
+const S = { tab:'tables', open:null, mode:'data', designer:null, armed:null, msg:null,
+  form:{table:'', rowid:null}, qb:{tables:[], fields:[], cf:'', op:'=', cv:'', sf:'', sd:'ASC', name:''}, qsql:null, qres:null,
+  rep:{source:'', group:'', fn:'avg', af:'', name:''}, viewRep:null, relForm:{parent:'', child:'', cfield:''} };
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = v => String(v ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const qi = n => '"' + String(n).replace(/"/g,'""') + '"';
+const TYPES = {auto:'ترقيم تلقائي', text:'نص', int:'رقم', real:'رقم عشري', date:'تاريخ', bool:'نعم/لا'};
+const SQLT = {auto:'INTEGER', text:'TEXT', int:'INTEGER', real:'REAL', date:'TEXT', bool:'INTEGER'};
+const NUMERIC = t => ['auto','int','real','bool'].includes(t);
+
+/* ---------- database helpers ---------- */
+function q(sql, p=[]){ const st=db.prepare(sql); st.bind(p); const out=[]; while(st.step()) out.push(st.getAsObject()); st.free(); return out; }
+function run(sql, p=[]){ db.run(sql, p); }
+function save(){ try{ const u=db.export(); let s=''; for(let i=0;i<u.length;i+=0x8000) s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000)); localStorage.setItem(KEY,btoa(s)); }catch(e){} db.exec('PRAGMA foreign_keys=ON'); }
+function initMeta(){
+  db.exec(`CREATE TABLE IF NOT EXISTS _fields(tbl TEXT, name TEXT, type TEXT, pk INTEGER, ord INTEGER);
+    CREATE TABLE IF NOT EXISTS _relations(id INTEGER PRIMARY KEY AUTOINCREMENT, parent TEXT, pfield TEXT, child TEXT, cfield TEXT);
+    CREATE TABLE IF NOT EXISTS _queries(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, sql TEXT);
+    CREATE TABLE IF NOT EXISTS _reports(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, spec TEXT);
+    PRAGMA foreign_keys=ON;`);
+}
+const tables = () => q(`SELECT tbl, MIN(rowid) o FROM _fields GROUP BY tbl ORDER BY o`).map(r=>r.tbl);
+const fields = t => q(`SELECT * FROM _fields WHERE tbl=? ORDER BY ord`,[t]);
+const rels = () => q(`SELECT * FROM _relations ORDER BY id`);
+const pkOf = t => fields(t).find(f=>f.pk);
+const count = t => q(`SELECT COUNT(*) n FROM ${qi(t)}`)[0].n;
+const labelField = t => { const f=fields(t); return (f.find(x=>x.type==='text')||pkOf(t)||f[0]).name; };
+
+function createSQL(t, as=t){
+  const parts = fields(t).map(f => f.type==='auto' ? `${qi(f.name)} INTEGER PRIMARY KEY AUTOINCREMENT` : `${qi(f.name)} ${SQLT[f.type]}${f.pk?' PRIMARY KEY':''}`);
+  rels().filter(r=>r.child===t).forEach(r=>parts.push(`FOREIGN KEY (${qi(r.cfield)}) REFERENCES ${qi(r.parent)}(${qi(r.pfield)})`));
+  return `CREATE TABLE ${qi(as)} (\n  ${parts.join(',\n  ')}\n)`;
+}
+function rebuild(t){
+  const cols = fields(t).map(f=>qi(f.name)).join(', '), tmp = '_tmp_rebuild';
+  db.exec('PRAGMA foreign_keys=OFF');
+  try{
+    db.exec('BEGIN');
+    db.exec(`DROP TABLE IF EXISTS ${qi(tmp)}`);
+    db.exec(createSQL(t, tmp));
+    db.exec(`INSERT INTO ${qi(tmp)} (${cols}) SELECT ${cols} FROM ${qi(t)}`);
+    db.exec(`DROP TABLE ${qi(t)}`);
+    db.exec(`ALTER TABLE ${qi(tmp)} RENAME TO ${qi(t)}`);
+    db.exec('COMMIT');
+  }catch(e){ try{db.exec('ROLLBACK')}catch(_){} throw e; }
+  finally{ db.exec('PRAGMA foreign_keys=ON'); }
+}
+
+function createTable(name, list){
+  name = name.trim();
+  if (!name) throw new Error('اكتبي اسم الجدول');
+  if (name.startsWith('_')) throw new Error('اسم الجدول لا يبدأ بشرطة سفلية');
+  if (tables().includes(name)) throw new Error('يوجد جدول بهذا الاسم');
+  list = list.filter(f=>f.name.trim()).map(f=>({...f, name:f.name.trim()}));
+  if (!list.length) throw new Error('أضيفي حقلًا واحدًا على الأقل');
+  if (new Set(list.map(f=>f.name)).size !== list.length) throw new Error('يوجد حقلان بالاسم نفسه');
+  const autos = list.filter(f=>f.type==='auto');
+  if (autos.length > 1) throw new Error('يُسمح بحقل ترقيم تلقائي واحد فقط');
+  if (autos.length) list.forEach(f=>f.pk = f.type==='auto');
+  if (list.filter(f=>f.pk).length !== 1) throw new Error('حدّدي مفتاحًا أساسيًا واحدًا للجدول');
+  list.forEach((f,i)=>run(`INSERT INTO _fields VALUES (?,?,?,?,?)`,[name,f.name,f.type,f.pk?1:0,i]));
+  try{ db.exec(createSQL(name)); }catch(e){ run(`DELETE FROM _fields WHERE tbl=?`,[name]); throw e; }
+  return createSQL(name);
+}
+function addRelation(parent, child, cfield){
+  if (!parent || !child || !cfield) throw new Error('اختاري الجدولين والحقل');
+  if (parent===child) throw new Error('اختاري جدولين مختلفين');
+  const pk = pkOf(parent), cf = fields(child).find(f=>f.name===cfield);
+  if (cf.pk) throw new Error('اختاري حقلًا ليس المفتاح الأساسي في الجدول المرتبط');
+  if (NUMERIC(pk.type) !== NUMERIC(cf.type)) throw new Error(`نوع الحقل «${cfield}» لا يطابق نوع المفتاح «${pk.name}». اجعليه ${NUMERIC(pk.type)?'رقم':'نص'}`);
+  if (rels().some(r=>r.child===child && r.cfield===cfield)) throw new Error('هذا الحقل مرتبط مسبقًا');
+  const bad = q(`SELECT COUNT(*) n FROM ${qi(child)} WHERE ${qi(cfield)} IS NOT NULL AND ${qi(cfield)} NOT IN (SELECT ${qi(pk.name)} FROM ${qi(parent)})`)[0].n;
+  if (bad) throw new Error(`يوجد ${bad} سجل في «${child}» قيمته لا تقابل أي سجل في «${parent}». صحّحيها أولًا`);
+  run(`INSERT INTO _relations (parent,pfield,child,cfield) VALUES (?,?,?,?)`,[parent,pk.name,child,cfield]);
+  try{ rebuild(child); }catch(e){ run(`DELETE FROM _relations WHERE child=? AND cfield=?`,[child,cfield]); throw e; }
+}
+function friendly(e){
+  const m = e.message||String(e);
+  if (/FOREIGN KEY/.test(m)) return 'القيمة غير موجودة في الجدول المرتبط، أو السجل مرتبط بسجلات أخرى (تكامل البيانات)';
+  if (/UNIQUE|PRIMARY KEY/.test(m)) return 'قيمة المفتاح الأساسي مكررة. كل سجل يحتاج قيمة مختلفة';
+  if (/no such table/.test(m)) return 'الاستعلام يستخدم جدولًا غير موجود';
+  if (/no such column/.test(m)) return 'الاستعلام يستخدم حقلًا غير موجود';
+  return m;
+}
+
+/* ---------- project tasks ---------- */
+const totalRows = () => tables().reduce((s,t)=>s+count(t),0);
+const TASKS = [
+  {tab:'tables', title:'أنشئي الجداول', check:()=>tables().length>=3, body:`<ul>
+    <li><b>المنتجات</b>: رقم_المنتج (ترقيم تلقائي)، اسم_المنتج (نص)، السعر (رقم عشري)</li>
+    <li><b>الزبونات</b>: رقم_الزبونة (ترقيم تلقائي)، الاسم (نص)، الحي (نص)</li>
+    <li><b>الطلبات</b>: رقم_الطلب (ترقيم تلقائي)، رقم_الزبونة (رقم)، رقم_المنتج (رقم)، الكمية (رقم)</li></ul>
+    حقل الترقيم التلقائي يصبح المفتاح الأساسي، فلا يتكرر رقم سجلين.`},
+  {tab:'rels', title:'اربطي الجداول بعلاقات', check:()=>rels().length>=2, body:`<ul>
+    <li>الزبونات ← الطلبات عن طريق <b>رقم_الزبونة</b></li>
+    <li>المنتجات ← الطلبات عن طريق <b>رقم_المنتج</b></li></ul>
+    هذه علاقة <b>واحد إلى متعدد</b>: الزبونة الواحدة تطلب مرات كثيرة.`},
+  {tab:'forms', title:'أدخلي البيانات بالنماذج', check:()=>totalRows()>=10, body:`اخترعي 4 نكهات كب كيك بأسعارها، وسجّلي 3 زبونات، ثم أدخلي طلبات لهن.
+    لاحظي أن نموذج الطلبات يعرض قائمة بأسماء الزبونات والنكهات بدل الأرقام، وهذا بسبب العلاقة.`},
+  {tab:'queries', title:'صمّمي استعلامًا', check:()=>q('SELECT COUNT(*) n FROM _queries')[0].n>=1, body:`اختاري الجداول الثلاثة، والحقول: الاسم، اسم_المنتج، الكمية.
+    الشرط: الكمية &gt;= 3، والترتيب: الكمية تنازليًا. شغّليه ثم احفظيه باسم «الطلبات الكبيرة».`},
+  {tab:'reports', title:'أنشئي تقريرًا', check:()=>q('SELECT COUNT(*) n FROM _reports')[0].n>=1, body:`المصدر: جدول الطلبات. التجميع حسب: رقم_المنتج.
+    الملخص: مجموع الكمية. سمّيه «مبيعات كل نكهة»، واكتشفي النكهة الأكثر مبيعًا!`},
+];
+function taskCard(tab){
+  const i = TASKS.findIndex(t=>t.tab===tab), T = TASKS[i], done = T.check();
+  return `<details class="task ${done?'done':''}" ${done?'':'open'}><summary><span class="stepn">الخطوة ${i+1} من 5</span>${T.title}<span class="st">${done?'✓ تمّت':''}</span></summary><div class="tb">${T.body}</div></details>`;
+}
+const msgHTML = () => S.msg ? `<div class="msg ${S.msg.err?'err':''}">${esc(S.msg.text)}</div>` : '';
+const ok = t => S.msg = {text:t}, bad = t => S.msg = {text:t, err:true};
+const del = (key, label) => S.armed===key ? 'تأكيد الحذف' : label;
+
+/* ---------- TABLES ---------- */
+function vTables(){
+  if (S.designer) return vDesigner();
+  if (S.open) return vOpenTable();
+  const ts = tables();
+  return `${taskCard('tables')}${msgHTML()}
+   <div class="list">${ts.map(t=>`<div class="item"><div class="main"><div class="t">${esc(t)}</div>
+     <div class="s">${fields(t).length} حقول · ${count(t)} سجلات</div></div>
+     <button class="small ghost" data-act="open" data-t="${esc(t)}">فتح</button></div>`).join('') || '<div class="empty">لا توجد جداول بعد. ابدئي بإنشاء جدول المنتجات.</div>'}</div>
+   <button data-act="newTable">+ جدول جديد</button>
+   <div class="card"><h3>للمعلمة</h3><div class="lbl">مثال مكتمل للعرض في الفصل، أو بداية جديدة لقاعدة فارغة.</div>
+     <div class="row"><button class="small ghost" data-act="example">${S.armed==='example'?'سيُستبدل ما لديك. تأكيد؟':'تحميل مثال مكتمل'}</button>
+     <button class="small danger" data-act="reset">${S.armed==='reset'?'سيُحذف كل شيء. تأكيد؟':'البدء من جديد'}</button></div></div>`;
+}
+function vDesigner(){
+  const d = S.designer;
+  return `${taskCard('tables')}
+   <div class="card"><div class="row"><h2 class="grow">تصميم جدول جديد</h2><button class="link" data-act="cancelDesign">إلغاء</button></div>
+    <div class="formf"><label for="dName">اسم الجدول</label><input id="dName" value="${esc(d.name)}" placeholder="مثال: المنتجات"></div>
+    <div class="lbl">الحقول: الاسم، نوع البيانات، والمفتاح الأساسي</div>
+    ${d.fields.map((f,i)=>`<div class="frow" data-i="${i}">
+      <input class="fn" id="fn${i}" value="${esc(f.name)}" placeholder="اسم الحقل" aria-label="اسم الحقل">
+      <select class="ft" id="ft${i}" aria-label="نوع البيانات">${Object.entries(TYPES).map(([k,v])=>`<option value="${k}" ${f.type===k?'selected':''}>${v}</option>`).join('')}</select>
+      <label class="pk"><input type="radio" name="pk" class="fp" ${f.pk?'checked':''}>مفتاح</label>
+      <button class="small danger" data-act="rmField" data-i="${i}" aria-label="حذف الحقل">×</button></div>`).join('')}
+    <button class="ghost small" data-act="addField">+ حقل</button>
+    <button data-act="saveTable">حفظ الجدول</button>${msgHTML()}</div>`;
+}
+function vOpenTable(){
+  const t = S.open, fs = fields(t), rs = rels();
+  const head = `${msgHTML()}<div class="row"><button class="link" data-act="back">‹ الجداول</button></div>
+   <div class="row"><h2 class="grow">${esc(t)}</h2>
+    <button class="small ${S.mode==='data'?'':'ghost'}" data-act="mode" data-m="data">ورقة البيانات</button>
+    <button class="small ${S.mode==='design'?'':'ghost'}" data-act="mode" data-m="design">التصميم</button></div>`;
+  if (S.mode==='design'){
+    return head + `<div class="list">${fs.map(f=>{ const r=rs.find(r=>r.child===t&&r.cfield===f.name);
+      return `<div class="item"><div class="main"><div class="t">${esc(f.name)}</div><div class="s">${TYPES[f.type]}</div></div>
+      ${f.pk?'<span class="badge">مفتاح أساسي</span>':''}${r?`<span class="badge">مفتاح أجنبي ← ${esc(r.parent)}</span>`:''}
+      ${!f.pk && !r && !rs.some(x=>x.parent===t&&x.pfield===f.name)?`<button class="small danger" data-act="dropField" data-f="${esc(f.name)}">${del('f'+f.name,'حذف')}</button>`:''}</div>`}).join('')}</div>
+     <div class="card"><h3>إضافة حقل</h3><div class="two"><input id="nfName" placeholder="اسم الحقل"><select id="nfType">${Object.entries(TYPES).filter(([k])=>k!=='auto').map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
+      <button class="small" data-act="addCol">إضافة</button></div>
+     <div class="lbl">جملة SQL التي أنشأت الجدول</div><div class="sql">${esc(createSQL(t))}</div>
+     <button class="danger" data-act="dropTable">${del('t'+t,'حذف الجدول')}</button>`;
+  }
+  const rows = q(`SELECT rowid AS _rid, * FROM ${qi(t)}`);
+  return head + `<div class="tablebox"><table><thead><tr>${fs.map(f=>`<th>${esc(f.name)}</th>`).join('')}<th></th></tr></thead><tbody>
+    ${rows.map(r=>`<tr>${fs.map(f=>`<td>${f.type==='bool'?(r[f.name]?'نعم':r[f.name]===0?'لا':''):esc(r[f.name])}</td>`).join('')}
+     <td><button class="small ghost" data-act="editRow" data-r="${r._rid}">تعديل</button> <button class="small danger" data-act="delRow" data-r="${r._rid}">${del('r'+r._rid,'حذف')}</button></td></tr>`).join('')}
+    </tbody></table>${rows.length?'':'<div class="empty">الجدول فارغ. أضيفي سجلات من النماذج.</div>'}</div>
+    <button data-act="toForm">+ إضافة سجل بالنموذج</button>`;
+}
+
+/* ---------- RELATIONSHIPS ---------- */
+function vRels(){
+  const ts = tables(), rf = S.relForm, rs = rels();
+  const childFields = rf.child ? fields(rf.child).filter(f=>!f.pk) : [];
+  return `${taskCard('rels')}${msgHTML()}
+   <div class="list">${rs.map(r=>`<div class="item"><div class="main rel">
+      <div class="ent"><b>${esc(r.parent)}</b><span>${esc(r.pfield)} · واحد</span></div><span aria-hidden="true">←</span>
+      <div class="ent"><b>${esc(r.child)}</b><span>${esc(r.cfield)} · متعدد</span></div></div>
+      <button class="small danger" data-act="dropRel" data-id="${r.id}">${del('l'+r.id,'حذف')}</button></div>`).join('') || '<div class="empty">لا توجد علاقات بعد</div>'}</div>
+   ${ts.length<2?'<div class="empty">تحتاجين جدولين على الأقل لإنشاء علاقة.</div>':`
+   <div class="card"><h3>علاقة جديدة (واحد إلى متعدد)</h3>
+    <div class="formf"><label for="rParent">الجدول الأساسي (جهة «واحد»)</label><select id="rParent" data-act="relPick"><option value="">اختاري</option>${ts.map(t=>`<option ${rf.parent===t?'selected':''}>${esc(t)}</option>`).join('')}</select>
+     ${rf.parent?`<div class="lbl">يرتبط عبر مفتاحه الأساسي: <b>${esc(pkOf(rf.parent).name)}</b></div>`:''}</div>
+    <div class="formf"><label for="rChild">الجدول المرتبط (جهة «متعدد»)</label><select id="rChild" data-act="relPick"><option value="">اختاري</option>${ts.filter(t=>t!==rf.parent).map(t=>`<option ${rf.child===t?'selected':''}>${esc(t)}</option>`).join('')}</select></div>
+    ${rf.child?`<div class="formf"><label for="rField">الحقل المقابل في «${esc(rf.child)}» (المفتاح الأجنبي)</label><select id="rField">${childFields.map(f=>`<option ${f.name===(rf.parent&&pkOf(rf.parent).name)?'selected':''}>${esc(f.name)}</option>`).join('')}</select></div>`:''}
+    <button data-act="saveRel">إنشاء العلاقة</button></div>`}`;
+}
+
+/* ---------- FORMS ---------- */
+function vForms(){
+  const ts = tables(), F = S.form;
+  if (!ts.includes(F.table)) { F.table = ts[0]||''; F.rowid = null; }
+  if (!F.table) return `${taskCard('forms')}<div class="empty">أنشئي جدولًا أولًا.</div>`;
+  const fs = fields(F.table), rs = rels(), ids = q(`SELECT rowid AS r FROM ${qi(F.table)} ORDER BY rowid`).map(x=>x.r);
+  const cur = F.rowid!=null ? q(`SELECT * FROM ${qi(F.table)} WHERE rowid=?`,[F.rowid])[0] : null;
+  const pos = cur ? ids.indexOf(F.rowid)+1 : 0;
+  const input = f => {
+    const v = cur ? cur[f.name] : '', id = 'ff_'+fs.indexOf(f), r = rs.find(r=>r.child===F.table&&r.cfield===f.name);
+    if (f.type==='auto') return `<input id="${id}" value="${cur?esc(v):'(جديد)'}" disabled>`;
+    if (r){ const lf = labelField(r.parent), opts = q(`SELECT ${qi(r.pfield)} k, ${qi(lf)} l FROM ${qi(r.parent)} ORDER BY ${qi(lf)}`);
+      return `<select id="${id}"><option value="">اختاري من «${esc(r.parent)}»</option>${opts.map(o=>`<option value="${esc(o.k)}" ${String(o.k)===String(v)?'selected':''}>${esc(o.l)}${lf!==r.pfield?' ('+esc(o.k)+')':''}</option>`).join('')}</select>`; }
+    if (f.type==='bool') return `<select id="${id}"><option value=""></option><option value="1" ${v===1?'selected':''}>نعم</option><option value="0" ${v===0?'selected':''}>لا</option></select>`;
+    const type = {int:'number',real:'number',date:'date'}[f.type]||'text';
+    return `<input id="${id}" type="${type}" ${f.type==='real'?'step="any"':''} ${type==='number'?'inputmode="decimal"':''} value="${esc(v)}">`;
+  };
+  return `${taskCard('forms')}
+   <div class="formf"><label for="fTable">النموذج</label><select id="fTable" data-act="formPick">${ts.map(t=>`<option ${t===F.table?'selected':''}>${esc(t)}</option>`).join('')}</select></div>
+   <div class="card"><div class="row"><h2 class="grow">نموذج ${esc(F.table)}</h2><span class="lbl">${cur?`السجل ${pos} من ${ids.length}`:`سجل جديد · المحفوظ ${ids.length}`}</span></div>
+    ${fs.map(f=>`<div class="formf"><label for="ff_${fs.indexOf(f)}">${esc(f.name)}${f.pk?' · مفتاح أساسي':''}</label>${input(f)}</div>`).join('')}
+    <button data-act="saveRec">${cur?'حفظ التعديل':'حفظ السجل'}</button>${msgHTML()}
+    <div class="nav-rec"><button class="small ghost" data-act="recNav" data-d="first" ${ids.length?'':'disabled'}>الأول</button>
+     <button class="small ghost" data-act="recNav" data-d="prev" ${ids.length?'':'disabled'}>السابق</button>
+     <button class="small ghost" data-act="recNav" data-d="next" ${ids.length?'':'disabled'}>التالي</button>
+     <button class="small" data-act="recNav" data-d="new">جديد</button></div>
+    ${cur?`<button class="small danger" data-act="delRec">${del('rec','حذف هذا السجل')}</button>`:''}</div>`;
+}
+
+/* ---------- QUERIES ---------- */
+function buildQuery(){
+  const B = S.qb, rs = rels();
+  if (!B.tables.length) throw new Error('اختاري جدولًا واحدًا على الأقل');
+  if (!B.fields.length) throw new Error('اختاري الحقول التي تظهر في النتيجة');
+  const joined = [B.tables[0]]; let from = qi(B.tables[0]); const rest = B.tables.slice(1);
+  while (rest.length){
+    const i = rest.findIndex(o => rs.some(r => (r.parent===o&&joined.includes(r.child)) || (r.child===o&&joined.includes(r.parent))));
+    if (i<0) throw new Error(`لا توجد علاقة تربط «${rest[0]}» بالجداول الأخرى. أنشئيها من شاشة العلاقات`);
+    const o = rest.splice(i,1)[0], r = rs.find(r => (r.parent===o&&joined.includes(r.child)) || (r.child===o&&joined.includes(r.parent)));
+    from += `\n  JOIN ${qi(o)} ON ${qi(r.child)}.${qi(r.cfield)} = ${qi(r.parent)}.${qi(r.pfield)}`; joined.push(o);
+  }
+  const fl = B.fields.map(k=>JSON.parse(k)).filter(([t])=>B.tables.includes(t));
+  if (!fl.length) throw new Error('اختاري الحقول التي تظهر في النتيجة');
+  const dup = n => fl.filter(([,f])=>f===n).length>1;
+  let sql = `SELECT ${fl.map(([t,f])=>`${qi(t)}.${qi(f)}${dup(f)?` AS ${qi(t+'_'+f)}`:''}`).join(', ')}\nFROM ${from}`;
+  if (B.cf){
+    const [t,f] = JSON.parse(B.cf), ft = (fields(t).find(x=>x.name===f)||{}).type;
+    if (B.cv==='') throw new Error('اكتبي قيمة الشرط');
+    const lit = NUMERIC(ft) && isFinite(+B.cv) ? +B.cv : `'${B.cv.replace(/'/g,"''")}'`;
+    sql += `\nWHERE ${qi(t)}.${qi(f)} ` + (B.op==='like' ? `LIKE '%${B.cv.replace(/'/g,"''")}%'` : `${B.op} ${lit}`);
+  }
+  if (B.sf){ const [t,f] = JSON.parse(B.sf); sql += `\nORDER BY ${qi(t)}.${qi(f)} ${B.sd}`; }
+  return sql;
+}
+function resultTable(res){
+  if (!res) return '';
+  return `<div class="tablebox"><table><thead><tr>${res.columns.map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>
+    ${res.values.map(v=>`<tr>${v.map(x=>`<td>${esc(x)}</td>`).join('')}</tr>`).join('')}</tbody></table>
+    ${res.values.length?'':'<div class="empty">لا توجد سجلات تحقق الشرط</div>'}</div><div class="lbl">${res.values.length} سجل</div>`;
+}
+function execSel(sql){ const r = db.exec(sql); const st = db.prepare(sql); const cols = st.getColumnNames(); st.free(); return r[0] || {columns:cols, values:[]}; }
+function vQueries(){
+  const ts = tables(), B = S.qb, saved = q('SELECT * FROM _queries ORDER BY id');
+  B.tables = B.tables.filter(t=>ts.includes(t));
+  const allF = B.tables.flatMap(t=>fields(t).map(f=>[t,f.name]));
+  const opt = (k,sel) => `<option value="${esc(JSON.stringify(k))}" ${sel===JSON.stringify(k)?'selected':''}>${esc(B.tables.length>1?k[0]+'.'+k[1]:k[1])}</option>`;
+  return `${taskCard('queries')}
+   ${saved.length?`<h3>الاستعلامات المحفوظة</h3><div class="list">${saved.map(s=>`<div class="item"><div class="main"><div class="t">${esc(s.name)}</div></div>
+     <button class="small ghost" data-act="runSaved" data-id="${s.id}">تشغيل</button><button class="small danger" data-act="dropQ" data-id="${s.id}">${del('q'+s.id,'حذف')}</button></div>`).join('')}</div>`:''}
+   <div class="card"><h2>تصميم استعلام</h2>
+    <div class="lbl">١. الجداول</div><div class="chk">${ts.map(t=>`<label><input type="checkbox" class="qt" value="${esc(t)}" data-act="qbTables" ${B.tables.includes(t)?'checked':''}>${esc(t)}</label>`).join('') || '<span class="lbl">لا توجد جداول</span>'}</div>
+    ${B.tables.length?`
+    <div class="lbl">٢. الحقول التي تظهر</div><div class="chk">${allF.map(k=>`<label><input type="checkbox" class="qf" value="${esc(JSON.stringify(k))}" ${B.fields.includes(JSON.stringify(k))?'checked':''}>${esc(B.tables.length>1?k[0]+'.'+k[1]:k[1])}</label>`).join('')}</div>
+    <div class="lbl">٣. الشرط (اختياري)</div>
+    <div class="three"><select id="qcf"><option value="">بدون شرط</option>${allF.map(k=>opt(k,B.cf)).join('')}</select>
+     <select id="qop">${[['=','يساوي'],['>','أكبر من'],['>=','أكبر أو يساوي'],['<','أصغر من'],['<=','أصغر أو يساوي'],['<>','لا يساوي'],['like','يحتوي']].map(([v,l])=>`<option value="${v}" ${B.op===v?'selected':''}>${l}</option>`).join('')}</select>
+     <input id="qcv" value="${esc(B.cv)}" placeholder="القيمة"></div>
+    <div class="lbl">٤. الترتيب (اختياري)</div>
+    <div class="two"><select id="qsf"><option value="">بدون ترتيب</option>${allF.map(k=>opt(k,B.sf)).join('')}</select>
+     <select id="qsd"><option value="ASC" ${B.sd==='ASC'?'selected':''}>تصاعدي</option><option value="DESC" ${B.sd==='DESC'?'selected':''}>تنازلي</option></select></div>
+    <button data-act="runQ">تشغيل الاستعلام</button>`:''}
+    ${S.tab==='queries'?msgHTML():''}</div>
+   ${S.qsql?`<div class="lbl">جملة SQL التي كتبها المصمم لكِ</div><div class="sql">${esc(S.qsql)}</div>`:''}
+   ${resultTable(S.qres)}
+   ${S.qsql && S.qres?`<div class="card"><h3>حفظ الاستعلام</h3><div class="row"><input id="qName" class="grow" placeholder="مثال: الطلبات الكبيرة" value="${esc(B.name)}"><button data-act="saveQ">حفظ</button></div></div>`:''}`;
+}
+
+/* ---------- REPORTS ---------- */
+function sourceSQL(src){
+  if (!src) return null;
+  if (src.startsWith('t:')){
+    const t = src.slice(2), rs = rels();
+    if (!tables().includes(t)) return null;
+    const cols = fields(t).map(f => { const r = rs.find(r=>r.child===t&&r.cfield===f.name);
+      return r ? `(SELECT ${qi(labelField(r.parent))} FROM ${qi(r.parent)} p WHERE p.${qi(r.pfield)} = x.${qi(f.name)}) AS ${qi(f.name)}` : `x.${qi(f.name)}`; });
+    return `SELECT ${cols.join(', ')} FROM ${qi(t)} x`;
+  }
+  const r = q('SELECT sql FROM _queries WHERE id=?',[+src.slice(2)])[0]; return r ? r.sql : null;
+}
+const FN = {avg:'المتوسط', sum:'المجموع', count:'العدد', max:'الأعلى', min:'الأدنى'};
+function agg(rows, fn, f){
+  if (fn==='count') return rows.length;
+  const n = rows.map(r=>r[f]).filter(v=>v!==null&&v!==''&&isFinite(+v)).map(Number);
+  if (!n.length) return '—';
+  const v = fn==='avg'? n.reduce((a,b)=>a+b,0)/n.length : fn==='sum'? n.reduce((a,b)=>a+b,0) : fn==='max'? Math.max(...n) : Math.min(...n);
+  return Math.round(v*100)/100;
+}
+function vReportPaper(rep){
+  const sp = JSON.parse(rep.spec), sql = sourceSQL(sp.source);
+  if (!sql) return `<button class="link" data-act="closeRep">‹ التقارير</button><div class="empty">مصدر التقرير لم يعد موجودًا.</div>`;
+  let res; try{ res = execSel(sql); }catch(e){ return `<button class="link" data-act="closeRep">‹ التقارير</button><div class="msg err">${esc(friendly(e))}</div>`; }
+  const rows = res.values.map(v=>Object.fromEntries(res.columns.map((c,i)=>[c,v[i]])));
+  const cols = res.columns.filter(c=>c!==sp.group);
+  const tbl = (rs, foot) => `<div class="tablebox"><table><thead><tr>${cols.map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>
+    ${rs.map(r=>`<tr>${cols.map(c=>`<td>${esc(r[c])}</td>`).join('')}</tr>`).join('')}
+    ${foot?`<tr class="sum"><td colspan="${cols.length}">${FN[sp.fn]}${sp.fn!=='count'?' '+esc(sp.af):''}: ${agg(rs,sp.fn,sp.af)}</td></tr>`:''}</tbody></table></div>`;
+  let body;
+  if (sp.group && res.columns.includes(sp.group)){
+    const g = new Map(); rows.forEach(r=>{ const k=r[sp.group]??'(بدون قيمة)'; if(!g.has(k)) g.set(k,[]); g.get(k).push(r); });
+    body = [...g.entries()].sort((a,b)=>String(a[0]).localeCompare(String(b[0]),'ar')).map(([k,rs])=>`<div class="grp"><h3>${esc(sp.group)}: ${esc(k)}</h3>${tbl(rs,true)}</div>`).join('');
+  } else body = tbl(rows,false);
+  const srcName = sp.source.startsWith('t:') ? 'جدول '+sp.source.slice(2) : 'استعلام '+((q('SELECT name FROM _queries WHERE id=?',[+sp.source.slice(2)])[0]||{}).name||'');
+  return `<div class="row"><button class="link" data-act="closeRep">‹ التقارير</button></div>
+   <div class="paper"><div class="ph"><div class="lbl">${esc(who.store||'متجر الكب كيك')}${who.name?' · إعداد الطالبة: '+esc(who.name):''}</div><h2>${esc(rep.name)}</h2><div class="lbl">المصدر: ${esc(srcName)} · ${new Date().toLocaleDateString('ar-SA',{dateStyle:'long'})} · ${rows.length} سجل</div></div>
+    ${body}<div class="grand"><span>الإجمالي · ${FN[sp.fn]}${sp.fn!=='count'?' '+esc(sp.af):''}</span><span>${agg(rows,sp.fn,sp.af)}</span></div></div>`;
+}
+function vReports(){
+  if (S.viewRep){ const r = q('SELECT * FROM _reports WHERE id=?',[S.viewRep])[0]; if (r) return vReportPaper(r); S.viewRep=null; }
+  const R = S.rep, ts = tables(), qs = q('SELECT id,name FROM _queries ORDER BY id'), reps = q('SELECT * FROM _reports ORDER BY id');
+  let cols = []; const sql = sourceSQL(R.source);
+  if (sql){ try{ const st=db.prepare(sql); cols=st.getColumnNames(); st.free(); }catch(e){} }
+  return `${taskCard('reports')}
+   ${reps.length?`<div class="list">${reps.map(r=>`<div class="item"><div class="main"><div class="t">${esc(r.name)}</div></div>
+     <button class="small ghost" data-act="viewRep" data-id="${r.id}">عرض</button><button class="small danger" data-act="dropRep" data-id="${r.id}">${del('p'+r.id,'حذف')}</button></div>`).join('')}</div>`:''}
+   <div class="card"><h2>معالج التقرير</h2>
+    <div class="formf"><label for="rpSrc">المصدر</label><select id="rpSrc" data-act="repPick"><option value="">اختاري جدولًا أو استعلامًا</option>
+     ${ts.length?`<optgroup label="الجداول">${ts.map(t=>`<option value="t:${esc(t)}" ${R.source==='t:'+t?'selected':''}>${esc(t)}</option>`).join('')}</optgroup>`:''}
+     ${qs.length?`<optgroup label="الاستعلامات">${qs.map(s=>`<option value="q:${s.id}" ${R.source==='q:'+s.id?'selected':''}>${esc(s.name)}</option>`).join('')}</optgroup>`:''}</select></div>
+    ${cols.length?`
+    <div class="formf"><label for="rpGroup">التجميع حسب (اختياري)</label><select id="rpGroup"><option value="">بدون تجميع</option>${cols.map(c=>`<option ${R.group===c?'selected':''}>${esc(c)}</option>`).join('')}</select></div>
+    <div class="two"><div class="formf"><label for="rpFn">الملخص</label><select id="rpFn">${Object.entries(FN).map(([k,v])=>`<option value="${k}" ${R.fn===k?'selected':''}>${v}</option>`).join('')}</select></div>
+     <div class="formf"><label for="rpAf">للحقل</label><select id="rpAf">${cols.map(c=>`<option ${R.af===c?'selected':''}>${esc(c)}</option>`).join('')}</select></div></div>
+    <div class="formf"><label for="rpName">عنوان التقرير</label><input id="rpName" value="${esc(R.name)}" placeholder="مثال: مبيعات كل نكهة"></div>
+    <button data-act="saveRep">إنشاء التقرير</button>`:''}${msgHTML()}</div>`;
+}
+
+/* ---------- render & events ---------- */
+function render(){
+  const v = {tables:vTables, rels:vRels, forms:vForms, queries:vQueries, reports:vReports, send:vSend, teacher:vTeacher, gallery:vGallery}[S.tab];
+  try{ $('#app').innerHTML = v(); }catch(e){ $('#app').innerHTML = `<div class="msg err">${esc(friendly(e))}</div>`; }
+  $$('nav button').forEach(b=>b.setAttribute('aria-current', b.dataset.tab===S.tab));
+  $('#prog').innerHTML = TASKS.map(t=>`<i class="${t.check()?'on':''}" title="${t.title}"></i>`).join('');
+  S.msg = null;
+}
+function syncDesigner(){
+  const d = S.designer; if (!d || !$('#dName')) return;
+  d.name = $('#dName').value;
+  d.fields = $$('.frow').map(r=>({name:r.querySelector('.fn').value, type:r.querySelector('.ft').value, pk:r.querySelector('.fp').checked}));
+}
+function syncQB(){
+  const B = S.qb;
+  B.tables = $$('.qt').filter(x=>x.checked).map(x=>x.value);
+  B.fields = $$('.qf').filter(x=>x.checked).map(x=>x.value);
+  if ($('#qcf')){ B.cf=$('#qcf').value; B.op=$('#qop').value; B.cv=$('#qcv').value.trim(); B.sf=$('#qsf').value; B.sd=$('#qsd').value; }
+  if ($('#qName')) B.name = $('#qName').value;
+}
+function syncRep(){ const R=S.rep; if($('#rpSrc')) R.source=$('#rpSrc').value; if($('#rpGroup')){ R.group=$('#rpGroup').value; R.fn=$('#rpFn').value; R.af=$('#rpAf').value; R.name=$('#rpName').value; } }
+
+document.addEventListener('change', e => {
+  const a = e.target.dataset.act;
+  if (a==='relPick'){ S.relForm.parent=$('#rParent').value; S.relForm.child=$('#rChild').value; if(S.relForm.child===S.relForm.parent) S.relForm.child=''; render(); }
+  if (a==='formPick'){ S.form={table:e.target.value,rowid:null}; render(); }
+  if (a==='qbTables'){ syncQB(); S.qsql=null; S.qres=null; render(); }
+  if (a==='repPick'){ syncRep(); S.rep.group=''; S.rep.af=''; render(); }
+});
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.tab){ S.tab=b.dataset.tab; S.armed=null; S.viewRep=null; render(); scrollTo(0,0); return; }
+  const a = b.dataset.act; if (!a) return;
+  const wasArmed = S.armed; S.armed = null;
+  const arm = k => { if (wasArmed===k) return true; S.armed=k; render(); return false; };
+  try{ actions[a] && actions[a](b.dataset, arm); }catch(err){ bad(friendly(err)); }
+  render();
+});
+
+const actions = {
+  newTable(){ S.designer={name:'', fields:[{name:'', type:'auto', pk:true},{name:'', type:'text', pk:false}]}; },
+  addField(){ syncDesigner(); S.designer.fields.push({name:'',type:'text',pk:false}); },
+  rmField(d){ syncDesigner(); S.designer.fields.splice(+d.i,1); },
+  cancelDesign(){ S.designer=null; },
+  saveTable(){ syncDesigner(); const n=S.designer.name.trim(); createTable(S.designer.name, S.designer.fields); save(); S.designer=null; ok(`أُنشئ جدول «${n}»`); },
+  open(d){ S.open=d.t; S.mode='data'; },
+  back(){ S.open=null; },
+  mode(d){ S.mode=d.m; },
+  addCol(){ const n=$('#nfName').value.trim(), t=$('#nfType').value;
+    if(!n) throw new Error('اكتبي اسم الحقل'); if(fields(S.open).some(f=>f.name===n)) throw new Error('يوجد حقل بهذا الاسم');
+    db.exec(`ALTER TABLE ${qi(S.open)} ADD COLUMN ${qi(n)} ${SQLT[t]}`);
+    run(`INSERT INTO _fields VALUES (?,?,?,0,(SELECT MAX(ord)+1 FROM _fields WHERE tbl=?))`,[S.open,n,t,S.open]); save(); ok(`أُضيف الحقل «${n}»`); },
+  dropField(d,arm){ if(!arm('f'+d.f)) return; run(`DELETE FROM _fields WHERE tbl=? AND name=?`,[S.open,d.f]);
+    try{ rebuild(S.open); }catch(e){ throw e; } save(); ok('حُذف الحقل'); },
+  dropTable(d,arm){ const t=S.open; if(!arm('t'+t)) return;
+    if (rels().some(r=>r.parent===t)) throw new Error('هذا الجدول أساسي في علاقة. احذفي العلاقة أولًا');
+    run(`DELETE FROM _relations WHERE child=?`,[t]); run(`DELETE FROM _fields WHERE tbl=?`,[t]); db.exec(`DROP TABLE ${qi(t)}`); save(); S.open=null; ok(`حُذف جدول «${t}»`); },
+  delRow(d,arm){ if(!arm('r'+d.r)) return; run(`DELETE FROM ${qi(S.open)} WHERE rowid=?`,[+d.r]); save(); ok('حُذف السجل'); },
+  editRow(d){ S.form={table:S.open,rowid:+d.r}; S.tab='forms'; },
+  toForm(){ S.form={table:S.open,rowid:null}; S.tab='forms'; },
+  example(d,arm){ if(!arm('example')) return; loadExample(); ok('حُمّل المثال المكتمل'); },
+  reset(d,arm){ if(!arm('reset')) return; db.close(); db=new SQL.Database(); initMeta(); save(); Object.assign(S,{open:null,designer:null,qsql:null,qres:null,viewRep:null}); ok('قاعدة بيانات فارغة جاهزة'); },
+  saveRel(){ addRelation($('#rParent').value, $('#rChild').value, $('#rField')&&$('#rField').value); save(); S.relForm={parent:'',child:'',cfield:''}; ok('أُنشئت العلاقة'); },
+  dropRel(d,arm){ if(!arm('l'+d.id)) return; const r=q('SELECT * FROM _relations WHERE id=?',[+d.id])[0]; run('DELETE FROM _relations WHERE id=?',[+d.id]); rebuild(r.child); save(); ok('حُذفت العلاقة'); },
+  saveRec(){ const F=S.form, fs=fields(F.table).filter(f=>f.type!=='auto');
+    const vals = fs.map(f=>{ const v=$('#ff_'+fields(F.table).findIndex(x=>x.name===f.name)).value.trim(); return v===''?null:(NUMERIC(f.type)?Number(v):v); });
+    if (vals.every(v=>v===null)) throw new Error('النموذج فارغ');
+    const pk = fs.find(f=>f.pk); if (pk && vals[fs.indexOf(pk)]===null) throw new Error(`اكتبي قيمة المفتاح الأساسي «${pk.name}»`);
+    if (F.rowid!=null){ run(`UPDATE ${qi(F.table)} SET ${fs.map(f=>qi(f.name)+'=?').join(', ')} WHERE rowid=?`,[...vals,F.rowid]); ok('حُفظ التعديل'); }
+    else { run(`INSERT INTO ${qi(F.table)} (${fs.map(f=>qi(f.name)).join(', ')}) VALUES (${fs.map(()=>'?').join(', ')})`,vals); F.rowid=null; ok('حُفظ السجل. النموذج جاهز لسجل جديد'); }
+    save(); },
+  recNav(d){ const F=S.form, ids=q(`SELECT rowid r FROM ${qi(F.table)} ORDER BY rowid`).map(x=>x.r); const i=ids.indexOf(F.rowid);
+    if(d.d==='new') F.rowid=null; else if(d.d==='first') F.rowid=ids[0]??null;
+    else if(d.d==='next') F.rowid = i<0? (ids[0]??null) : (ids[Math.min(i+1,ids.length-1)]);
+    else F.rowid = i<0? (ids[ids.length-1]??null) : ids[Math.max(i-1,0)]; },
+  delRec(d,arm){ if(!arm('rec')) return; run(`DELETE FROM ${qi(S.form.table)} WHERE rowid=?`,[S.form.rowid]); save(); S.form.rowid=null; ok('حُذف السجل'); },
+  runQ(){ syncQB(); S.qsql=null; S.qres=null; S.qsql=buildQuery(); S.qres=execSel(S.qsql); },
+  saveQ(){ syncQB(); const n=S.qb.name.trim(); if(!n) throw new Error('اكتبي اسمًا للاستعلام'); run('INSERT INTO _queries (name,sql) VALUES (?,?)',[n,S.qsql]); save(); S.qb.name=''; ok(`حُفظ استعلام «${n}»`); },
+  runSaved(d){ const s=q('SELECT * FROM _queries WHERE id=?',[+d.id])[0]; S.qsql=s.sql; S.qres=null; S.qres=execSel(s.sql); },
+  dropQ(d,arm){ if(!arm('q'+d.id)) return; run('DELETE FROM _queries WHERE id=?',[+d.id]); save(); ok('حُذف الاستعلام'); },
+  saveRep(){ syncRep(); const R=S.rep; if(!R.name.trim()) throw new Error('اكتبي عنوان التقرير');
+    run('INSERT INTO _reports (name,spec) VALUES (?,?)',[R.name.trim(),JSON.stringify({source:R.source,group:R.group,fn:R.fn,af:R.af})]);
+    save(); S.viewRep=q('SELECT MAX(id) m FROM _reports')[0].m; S.rep={source:'',group:'',fn:'avg',af:'',name:''}; },
+  viewRep(d){ S.viewRep=+d.id; scrollTo(0,0); },
+  closeRep(){ S.viewRep=null; },
+  dropRep(d,arm){ if(!arm('p'+d.id)) return; run('DELETE FROM _reports WHERE id=?',[+d.id]); save(); ok('حُذف التقرير'); },
+};
+
+function loadExample(){
+  db.close(); db = new SQL.Database(); initMeta();
+  createTable('المنتجات',[{name:'رقم_المنتج',type:'auto'},{name:'اسم_المنتج',type:'text'},{name:'السعر',type:'real'}]);
+  createTable('الزبونات',[{name:'رقم_الزبونة',type:'auto'},{name:'الاسم',type:'text'},{name:'الحي',type:'text'}]);
+  createTable('الطلبات',[{name:'رقم_الطلب',type:'auto'},{name:'رقم_الزبونة',type:'int'},{name:'رقم_المنتج',type:'int'},{name:'الكمية',type:'int'}]);
+  addRelation('الزبونات','الطلبات','رقم_الزبونة'); addRelation('المنتجات','الطلبات','رقم_المنتج');
+  db.exec(`INSERT INTO "المنتجات" ("اسم_المنتج","السعر") VALUES ('فانيلا بالفراولة',8),('شوكولاتة مزدوجة',10),('ريد فلفت',12),('لوتس',11.5);
+    INSERT INTO "الزبونات" ("الاسم","الحي") VALUES ('جود','النرجس'),('رهف','الياسمين'),('ليان','الملقا');
+    INSERT INTO "الطلبات" ("رقم_الزبونة","رقم_المنتج","الكمية") VALUES (1,2,6),(1,4,2),(2,3,4),(2,1,1),(3,4,5),(3,2,3),(1,3,1),(2,4,3);`);
+  S.qb = {tables:['الطلبات','الزبونات','المنتجات'], fields:[JSON.stringify(['الزبونات','الاسم']),JSON.stringify(['المنتجات','اسم_المنتج']),JSON.stringify(['الطلبات','الكمية'])], cf:JSON.stringify(['الطلبات','الكمية']), op:'>=', cv:'3', sf:JSON.stringify(['الطلبات','الكمية']), sd:'DESC', name:''};
+  run('INSERT INTO _queries (name,sql) VALUES (?,?)',['الطلبات الكبيرة', buildQuery()]);
+  run('INSERT INTO _reports (name,spec) VALUES (?,?)',['مبيعات كل نكهة', JSON.stringify({source:'t:الطلبات',group:'رقم_المنتج',fn:'sum',af:'الكمية'})]);
+  save(); Object.assign(S,{open:null,designer:null,qsql:null,qres:null,viewRep:null});
+}
+
+let who = {name:'', store:''};
+try{ who = Object.assign(who, JSON.parse(localStorage.getItem('cupcake-student')||'{}')); }catch(e){}
+function showWho(){ $('#storeTitle').textContent = (who.store||'متجر الكب كيك') + ' 🧁'; }
+$('#stuName').value = who.name; $('#stuStore').value = who.store; showWho();
+['stuName','stuStore'].forEach(id => $('#'+id).addEventListener('input', () => {
+  who.name = $('#stuName').value.trim(); who.store = $('#stuStore').value.trim(); showWho();
+  try{ localStorage.setItem('cupcake-student', JSON.stringify(who)); }catch(e){}
+}));
+
+/* ---------- send to teacher & teacher dashboard ---------- */
+let cdb = null, myId = null, owner = false, subs = null, scores = {}, mySub = null, sending = false;
+let ans = {};
+try{ ans = Object.assign(ans, JSON.parse(localStorage.getItem('cupcake-answers')||'{}')); }catch(e){}
+function autoScore(){
+  const ts = tables(), allF = ts.flatMap(fields), rs = rels();
+  const qs = q('SELECT sql FROM _queries'), rp = q('SELECT spec FROM _reports').map(r=>JSON.parse(r.spec));
+  const rows = totalRows();
+  const parts = [
+    ['الجداول', Math.min(2,ts.length>=3?2:ts.length>=1?1:0) + (allF.length>=10?1:0) + (allF.some(f=>!f.pk&&(f.type==='real'||f.type==='int'))?1:0), 4],
+    ['العلاقات', Math.min(2, rs.length), 2],
+    ['النماذج والبيانات', (rows>=7?1:0) + (rows>=13?1:0), 2],
+    ['الاستعلام', Math.min(3, (qs.length?1:0) + (qs.some(x=>/JOIN/.test(x.sql))?1:0) + (qs.some(x=>/WHERE/.test(x.sql))?1:0)), 3],
+    ['التقرير', (rp.length?2:0) + (rp.some(x=>x.group)?1:0), 3],
+  ];
+  return {parts, total: parts.reduce((a,p)=>a+p[1],0), counts:{tables:ts.length, rels:rs.length, rows, queries:qs.length, reports:rp.length}};
+}
+function summaryText(sc){
+  return [`الطالبة: ${who.name||'—'} · المتجر: ${who.store||'—'}`,
+    ...sc.parts.map(p=>`${p[0]}: ${p[1]} من ${p[2]}`), `درجة التطبيق: ${sc.total} من 14`,
+    `الصف: ${ans.grade||''} ${ans.cls||''}`, `النكهات: ${[1,2,3,4].map(i=>(ans['p'+i+'n']||'')+' '+(ans['p'+i+'p']||'')).join('، ')}`,
+    `الحقل المشترك للمنتجات: ${ans.r2||''}`, `النماذج: ${ans.a0||''}`, `استعلامي: ${ans.mq1||''} / ${ans.mq2||''} / ${ans.mq3||''}`,
+    `النكهة الأكثر مبيعًا: ${ans.best||''}`, `1) ${ans.a1||''}`, `2) ${ans.a2||''}`, `3) ${ans.a3||''}`].join('\n');
+}
+const fld = (k, ph='', w='') => `<input class="ans" id="w_${k}" data-k="${k}" value="${esc(ans[k]||'')}" placeholder="${ph}" aria-label="${ph||k}" ${w}>`;
+const ta = (k, label) => `<div class="formf"><label for="w_${k}">${label}</label><textarea class="ans" id="w_${k}" data-k="${k}" rows="3" style="font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%">${esc(ans[k]||'')}</textarea></div>`;
+function vSend(){
+  const sc = autoScore(), sec = (n,t,body) => `<div class="card"><h2><span class="card-n">${n}</span> ${t}</h2>${body}</div>`;
+  const grid = (head, rows) => `<div class="tablebox"><table><thead><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  return `<div class="card"><h2>ورقة العمل</h2>
+     <div class="lbl">اكتبي إجاباتك هنا وهي تُحفظ تلقائيًا، ثم أرسليها للمعلمة من أسفل الصفحة.</div>
+     ${who.name?`<div>الطالبة: <b>${esc(who.name)}</b>${who.store?' · '+esc(who.store):''}</div>`:'<div class="msg err">اكتبي اسمك واسم متجرك في أعلى الشاشة.</div>'}
+     <div class="two">${fld('grade','الصف')}${fld('cls','الفصل')}</div></div>
+   ${sec('1','الجداول: خطّطي لمتجرك',`<div class="lbl">اخترعي 4 نكهات بأسعارها و3 زبونات، ثم أدخليها في التطبيق من «النماذج».</div>
+     ${grid(['رقم_المنتج','اسم_المنتج','السعر (ريال)'],[1,2,3,4].map(i=>[i,fld('p'+i+'n','النكهة'),fld('p'+i+'p','السعر','inputmode="decimal"')]))}
+     ${grid(['رقم_الزبونة','الاسم','الحي'],[1,2,3].map(i=>[i,fld('c'+i+'n','الاسم'),fld('c'+i+'h','الحي')]))}`)}
+   ${sec('2','العلاقات',grid(['الجدول الأساسي','الجدول المرتبط','الحقل المشترك'],[['الزبونات','الطلبات','رقم_الزبونة'],['المنتجات','الطلبات',fld('r2','أكملي')]]))}
+   ${sec('3','النماذج',ta('a0','لماذا يظهر في نموذج الطلبات اسم الزبونة بدل رقمها؟'))}
+   ${sec('4','الاستعلام',`<div class="lbl">صمّمي استعلامًا من اختيارك واحفظيه، ثم اكتبي وصفه.</div>
+     ${grid(['اسم الاستعلام','الشرط','عدد النتائج'],[[fld('mq1','الاسم'),fld('mq2','الشرط'),fld('mq3','العدد','inputmode="numeric"')]])}`)}
+   ${sec('5','التقرير',`<div class="lbl">انقلي النتيجة من تقرير «مبيعات كل نكهة».</div>
+     ${grid(['النكهة','مجموع الكمية'],[1,2,3,4].map(i=>[fld('t'+i+'a','النكهة'),fld('t'+i+'b','الكمية','inputmode="numeric"')]))}
+     <div class="formf"><label for="w_best">النكهة الأكثر مبيعًا في متجري</label>${fld('best')}</div>`)}
+   ${sec('؟','أسئلة التفكير',ta('a1','1. لماذا لا يسمح التطبيق بتسجيل طلب لزبونة غير موجودة؟')+ta('a2','2. ما الفرق بين الاستعلام والتقرير؟')+ta('a3','3. اقترحي جدولًا رابعًا لمتجرك واذكري حقوله.'))}
+   <div class="card"><h2>الإرسال للمعلمة</h2>
+    <div class="lbl">التصحيح التلقائي لعملك في التطبيق</div>
+    ${grid(['المهارة','الدرجة'],[...sc.parts.map(p=>[p[0],`${p[1]} من ${p[2]}`]),['<b>المجموع</b>',`<b>${sc.total} من 14</b>`]])}
+    <div class="lbl">أسئلة التفكير وورقة العمل من 6، تصححها المعلمة.</div>
+    ${cdb && myId ? `<button data-act="submit" ${sending?'disabled':''}>${sending?'جارٍ الإرسال…':mySub?'إرسال التحديث':'إرسال للمعلمة'}</button>
+       ${mySub?`<div class="msg">وصل عملك للمعلمة ${new Date(mySub.sentAt).toLocaleString('ar-SA',{dateStyle:'medium',timeStyle:'short'})}. يمكنك الإرسال مرة أخرى بعد أي تعديل.</div>`:''}`
+     : `<div class="lbl">الإرسال المباشر غير متاح على هذا الجهاز. انسخي الملخص وأرسليه للمعلمة في قناة الفصل.</div>
+       <button data-act="copySum">نسخ الملخص</button><pre class="sql" id="sumBox" style="direction:rtl;text-align:right;white-space:pre-wrap">${esc(summaryText(sc))}</pre>`}
+    ${msgHTML()}</div>`;
+}
+function wsDetails(r){
+  const w = r.ws||{};
+  return `النكهات: ${[1,2,3,4].map(i=>esc(w['p'+i+'n']||'')+(w['p'+i+'p']?' ('+esc(w['p'+i+'p'])+' ريال)':'')).filter(x=>x).join('، ')||'—'}<br>
+    الزبونات: ${[1,2,3].map(i=>esc(w['c'+i+'n']||'')).filter(x=>x).join('، ')||'—'}<br>
+    العلاقة الثانية عبر: ${esc(w.r2||'—')}<br>النماذج: ${esc(w.a0||'—')}<br>
+    استعلامها: ${esc(w.mq1||'—')} · ${esc(w.mq2||'')}${w.mq3?' · '+esc(w.mq3)+' نتيجة':''}<br>
+    المبيعات: ${[1,2,3,4].map(i=>esc(w['t'+i+'a']||'')+(w['t'+i+'b']?' '+esc(w['t'+i+'b']):'')).filter(x=>x).join('، ')||'—'}<br>
+    الأكثر مبيعًا: ${esc(r.best||'—')}<br>1) ${esc(r.a1||'—')}<br>2) ${esc(r.a2||'—')}<br>3) ${esc(r.a3||'—')}`;
+}
+function storeCard(r, star){
+  return `<details class="card" style="gap:6px"><summary style="cursor:pointer;list-style:none">
+    <div class="row"><div class="grow"><div class="t" style="font-weight:600">${star&&r.featured?'⭐ ':''}${esc(r.store||'متجر بلا اسم')}</div><div class="lbl">${esc(r.name)}</div></div><span class="badge">عرض الإجابات</span></div></summary>
+    <div class="s" style="font-size:14px">${wsDetails(r)}</div></details>`;
+}
+function vGallery(){
+  if (!cdb) return `<div class="empty">المعرض يحتاج تسجيل الدخول إلى Claude ومشاركة الرابط من المعلمة.</div>`;
+  if (subs===null) return '<div class="empty">جارٍ تحميل المتاجر…</div>';
+  const list = [...subs].sort((a,b)=>String(a.name).localeCompare(String(b.name),'ar')), top = list.filter(r=>r.featured);
+  return `<div class="card" style="background:var(--soft);border:0"><h2>⭐ المتميزات</h2>
+      ${top.length?top.map(r=>storeCard(r,true)).join(''):'<div class="lbl">تختار المعلمة أفضل المتاجر وتظهر هنا.</div>'}</div>
+    <h3>كل المتاجر (${list.length})</h3>
+    ${list.length?list.map(r=>storeCard(r,true)).join(''):'<div class="empty">لم ترسل أي طالبة عملها بعد.</div>'}`;
+}
+function vTeacher(){
+  if (!owner) return '<div class="empty">هذه الشاشة للمعلمة فقط.</div>';
+  if (subs===null) return '<div class="empty">جارٍ تحميل الإجابات…</div>';
+  const list = [...subs].sort((a,b)=>String(a.name).localeCompare(String(b.name),'ar'));
+  return `<div class="card"><div class="row"><h2 class="grow">لوحة المعلمة</h2><span class="badge">${list.length} طالبة أرسلت</span></div>
+    <div class="lbl">درجة التطبيق تُحسب تلقائيًا من 14. اكتبي درجة ورقة العمل من 6. اضغطي ⭐ لإضافة المتجر إلى المتميزات في المعرض. الدرجات تظهر لكِ وحدك.</div></div>
+    ${list.length?`<div class="tablebox"><table><thead><tr><th>الطالبة</th><th>التطبيق /14</th><th>الورقة /6</th><th>المجموع /20</th><th>متميزة</th></tr></thead><tbody>
+    ${list.map(r=>{ const g = scores[r.id]||{}; return `<tr><td>${esc(r.name)}<div class="lbl">${esc(r.store||'')}</div></td><td>${g.appScore??'—'}</td>
+      <td><input class="tscore" data-id="${esc(r.id)}" type="number" min="0" max="6" inputmode="numeric" value="${g.thinkScore??''}" style="width:4.5em" aria-label="درجة الورقة"></td>
+      <td><b>${g.thinkScore!=null&&g.appScore!=null?g.appScore+g.thinkScore:'—'}</b></td>
+      <td><button class="small ${r.featured?'':'ghost'}" data-act="feature" data-id="${esc(r.id)}" aria-pressed="${!!r.featured}">${r.featured?'⭐ متميزة':'☆ اختيار'}</button></td></tr>`}).join('')}</tbody></table></div>
+    <h3>إجابات الطالبات</h3>${list.map(r=>storeCard(r,true)).join('')}`
+    :'<div class="empty">لم تُرسل أي طالبة عملها بعد. عندما تضغط الطالبة «إرسال للمعلمة» يظهر اسمها هنا.</div>'}`;
+}
+document.addEventListener('input', e => {
+  if (e.target.classList.contains('ans')){ ans[e.target.dataset.k] = e.target.value; try{ localStorage.setItem('cupcake-answers', JSON.stringify(ans)); }catch(_){} }
+});
+document.addEventListener('change', async e => {
+  if (!e.target.classList.contains('tscore')) return;
+  const v = e.target.value===''?null:Math.max(0,Math.min(6,Math.round(+e.target.value)));
+  try{ await cdb.collection('scores').doc(e.target.dataset.id).update({thinkScore:v}); }catch(err){ bad('لم تُحفظ الدرجة: '+(err.message||err.code)); render(); }
+});
+actions.submit = async () => {
+  if (!who.name){ bad('اكتبي اسمك في أعلى الشاشة أولًا'); return; }
+  const sc = autoScore(); sending = true; const now = new Date().toISOString();
+  const pub = {name:who.name, store:who.store||'', best:ans.best||'', a1:ans.a1||'', a2:ans.a2||'', a3:ans.a3||'', ws:{...ans}, sentAt:now};
+  const grade = {name:who.name, appScore:sc.total, parts:sc.parts, counts:sc.counts, sentAt:now};
+  try{
+    const sd = cdb.collection('submissions').doc(myId), gd = cdb.collection('scores').doc(myId);
+    if (mySub) await sd.update(pub); else await sd.set({...pub, featured:false});
+    try{ await gd.update(grade); }catch(e){ await gd.set(grade); }
+    mySub = {...(mySub||{}), ...pub}; ok('وصل عملك للمعلمة، وظهر في معرض المتاجر');
+  }catch(err){ bad(err.code==='not_granted'?'لا تملكين صلاحية الإرسال. اطلبي من المعلمة مشاركة الرابط معك بصلاحية التفاعل':'تعذّر الإرسال، حاولي مرة أخرى'); }
+  sending = false; render();
+};
+actions.feature = async d => {
+  const r = (subs||[]).find(x=>x.id===d.id); if (!r) return;
+  try{ await cdb.collection('submissions').doc(d.id).update({featured:!r.featured}); }catch(e){ bad('تعذّر الحفظ'); render(); }
+};
+actions.copySum = () => {
+  const t = summaryText(autoScore());
+  navigator.clipboard.writeText(t).then(()=>{ ok('نُسخ الملخص'); render(); }).catch(()=>{ const r=document.createRange(); r.selectNodeContents($('#sumBox')); const s=getSelection(); s.removeAllRanges(); s.addRange(r); });
+};
+(async () => {
+  if (!window.claude?.use) return;
+  const [u, d] = await Promise.all([claude.use('user'), claude.use('db')]);
+  cdb = d;
+  if (u){ try{ owner = await u.isOwner(); myId = await u.id(); }catch(e){} }
+  if (cdb) $('#galBtn').hidden = false;
+  if (owner) $('#teachBtn').hidden = false;
+  if (cdb && myId){
+    try{ const snap = await cdb.collection('submissions').doc(myId).get(); if (snap.exists) mySub = snap.data(); }catch(e){}
+  }
+  const live = () => (S.tab==='teacher' || S.tab==='gallery') && !document.activeElement?.classList.contains('tscore') && db && render();
+  if (cdb){
+    cdb.collection('submissions').onSnapshot(snap => { subs = snap.docs.map(x=>({id:x.id, ...x.data()})); live(); }, () => { subs = []; live(); });
+  }
+  if (cdb && owner){
+    cdb.collection('scores').onSnapshot(snap => { scores = Object.fromEntries(snap.docs.map(x=>[x.id, x.data()])); live(); }, () => {});
+  }
+  if (db && ['send','teacher','gallery'].includes(S.tab)) render();
+})();
+
+
+initSqlJs().then(s => {
+  SQL = s; let saved = null;
+  try{ saved = localStorage.getItem(KEY); }catch(e){}
+  if (saved){ try{ const b=atob(saved), u=new Uint8Array(b.length); for(let i=0;i<b.length;i++) u[i]=b.charCodeAt(i); db=new SQL.Database(u); }catch(e){ db=null; } }
+  if (!db){ db = new SQL.Database(); }
+  initMeta(); save();
+  $('#loading').hidden = true; render();
+}).catch(e => { $('#loading').textContent = 'تعذّر تحميل محرك قاعدة البيانات: ' + e.message; });
+</script>
+</body></html>
