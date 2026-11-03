@@ -83,7 +83,7 @@ input[type=checkbox],input[type=radio]{width:auto;accent-color:var(--access)}
 .doc{background:#fff;border:1px solid var(--line);border-radius:0 10px 10px 10px;padding:16px;display:flex;flex-direction:column;gap:14px;min-height:300px}
 @media (max-width:899px){
   .body{grid-template-columns:minmax(0,1fr)}
-  .navpane{position:fixed;inset:0 auto 0 0;width:min(300px,86vw);z-index:40;box-shadow:0 0 0 100vmax rgba(30,10,15,.35);transform:translateX(-110%);transition:transform .2s;min-height:0;max-height:none}
+  .navpane{position:fixed;inset:0 auto 0 0;width:min(300px,86vw);z-index:40;box-shadow:0 0 30px rgba(30,10,15,.25);transform:translateX(-110%);transition:transform .2s;min-height:0;max-height:none}
   html[dir=rtl] .navpane{inset:0 0 0 auto;transform:translateX(110%)}
   .navpane.open{transform:none}
 }
@@ -256,7 +256,8 @@ details.more[open]>summary{margin-bottom:8px}
 #toast.ok{background:var(--ok)} #toast.err{background:var(--err)}
 #confetti{position:fixed;inset:0;pointer-events:none;z-index:70}
 #loading{padding:40px;text-align:center;color:var(--muted)}
-.scrim{position:fixed;inset:0;z-index:35}
+.scrim{position:fixed;inset:0;z-index:35;background:rgba(30,10,15,.35);width:100%}
+@media (min-width:900px){.scrim{display:none!important}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head>
 <body>
@@ -281,6 +282,7 @@ details.more[open]>summary{margin-bottom:8px}
 </div>
 <footer class="statusbar gut"><span class="vn" id="viewName">جاهز</span><span class="credit">إعداد وتصميم: أ. أمل الشهري</span><div class="prog" id="prog"></div></footer>
 <div id="toast" role="status" aria-live="polite"></div>
+<button class="scrim" id="scrim" data-act="pane" hidden aria-label="إغلاق جزء التنقل"></button>
 <canvas id="confetti"></canvas>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-asm.js"></script>
@@ -542,8 +544,8 @@ function vForms(){
     return `<input id="${id}" type="${type}" ${f.type==='real'?'step="any"':''} ${type==='number'?'inputmode="decimal"':''} value="${esc(v)}">`;
   };
   return `${hint('forms')}
-   <div class="formchips">${ts.map(t=>`<button class="chip" data-act="formPick" data-t="${esc(t)}" aria-pressed="${t===F.table}">${ico('form',t===F.table?'#fff':'var(--c-form)')}نموذج ${esc(t)}</button>`).join('')}</div>
-   <div class="aform"><div class="fhd">${ico('form','#fff')}<h2 class="grow">${esc(F.table)}</h2><span style="font-size:13px">${cur?`تعديل السجل ${pos}`:'سجل جديد'}</span></div>
+   <div class="formchips">${ts.map(t=>`<button class="chip" data-act="formPick" data-t="${esc(t)}" aria-pressed="${t===F.table}">${ico('form',t===F.table?'rgba(255,255,255,.5)':'var(--c-form)')}نموذج ${esc(t)}</button>`).join('')}</div>
+   <div class="aform"><div class="fhd">${ico('form','rgba(255,255,255,.45)')}<h2 class="grow">${esc(F.table)}</h2><span style="font-size:13px">${cur?`تعديل السجل ${pos}`:'سجل جديد'}</span></div>
     <div class="fbody">
      ${fs.map(f=>`<div class="frow2"><label for="ff_${fs.indexOf(f)}">${esc(f.name)}${f.pk?'<span class="pkt">🔑 مفتاح أساسي</span>':''}</label>${input(f)}</div>`).join('')}
      <div class="row" style="margin-top:4px"><button class="btn" data-act="saveRec">${ico('save')} ${cur?'حفظ التعديل':'حفظ السجل'}</button>
@@ -812,7 +814,7 @@ function render(){
   const done = TASKS.map(t=>t.check());
   $('#rtabs').innerHTML = `<button class="rtab menu" data-act="pane" aria-label="جزء التنقل">${ico('menu')}الكائنات</button>` + TABS.map(([k,n],i)=>`<button class="rtab ${i<5&&done[i]?'done':''}" data-tab="${k}" aria-current="${S.tab===k}">${i<5?'<span class="dot"></span>':''}${n}</button>`).join('');
   $('#ribbon').innerHTML = ribbon();
-  $('#navpane').innerHTML = navpane(); $('#navpane').classList.toggle('open', S.pane);
+  $('#navpane').innerHTML = navpane(); $('#navpane').classList.toggle('open', S.pane); $('#scrim').hidden = !S.pane;
   $('#doctab').innerHTML = docTab();
   $('#viewName').textContent = viewName();
   const n = done.filter(Boolean).length;
