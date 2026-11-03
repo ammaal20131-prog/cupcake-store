@@ -146,6 +146,9 @@ table.grid{border-collapse:collapse;width:100%;font-size:14px;font-variant-numer
 .grid tr.newrow:hover td{background:var(--access-soft)!important;color:var(--access)}
 .grid td input,.grid td select{border:1px solid transparent;border-radius:4px;background:transparent;padding:4px 6px}
 .grid td input:focus,.grid td select:focus{border-color:var(--access);background:#fff}
+.frow td{padding:4px 4px}
+.frow .fn{min-width:8.6em}
+.frow .ft{min-width:7.6em;padding-inline:4px}
 .grid .acts{display:flex;gap:4px;justify-content:flex-end}
 .iconbtn{width:30px;height:30px;border-radius:6px;display:inline-grid;place-items:center;color:var(--muted)}
 .iconbtn:hover{background:var(--sel);color:var(--access)}
@@ -445,7 +448,7 @@ function vDesigner(){
   const d = S.designer;
   return `${hint('tables')}
    <div class="field" style="max-width:360px"><label for="dName">اسم الجدول</label><input id="dName" value="${esc(d.name)}" placeholder="مثال: المنتجات"></div>
-   <div class="gridwrap"><table class="grid"><thead><tr><th class="sel"></th><th>اسم الحقل</th><th>نوع البيانات</th><th>مفتاح أساسي</th><th></th></tr></thead><tbody>
+   <div class="gridwrap"><table class="grid"><thead><tr><th class="sel"></th><th>اسم الحقل</th><th>نوع البيانات</th><th>مفتاح</th><th></th></tr></thead><tbody>
     ${d.fields.map((f,i)=>`<tr class="frow" data-i="${i}"><td class="sel">${f.pk||f.type==='auto'?ico('key'):''}</td>
       <td><input class="fn" id="fn${i}" value="${esc(f.name)}" placeholder="اسم الحقل" aria-label="اسم الحقل ${i+1}"></td>
       <td><select class="ft" id="ft${i}" aria-label="نوع البيانات">${Object.entries(TYPES).map(([k,v])=>`<option value="${k}" ${f.type===k?'selected':''}>${v}</option>`).join('')}</select></td>
