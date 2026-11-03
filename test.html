@@ -87,7 +87,7 @@ input[type=checkbox],input[type=radio]{width:auto;accent-color:var(--access)}
   html[dir=rtl] .navpane{inset:0 0 0 auto;transform:translateX(110%)}
   .navpane.open{transform:none}
 }
-@media (min-width:900px){ .rtab.menu{display:none} }
+@media (min-width:900px){ .rtab.menu,.np-x{display:none} }
 
 /* hint (task) bar */
 .hint{background:var(--lemon);border:1px solid var(--lemon-line);border-radius:10px;color:var(--lemon-ink)}
@@ -477,12 +477,16 @@ function vOpenTable(){
 }
 
 /* ---------- RELATIONSHIPS ---------- */
+function relOrder(ts, rs){
+  const kids = ts.filter(t=>rs.some(r=>r.child===t)), par = ts.filter(t=>!kids.includes(t)), h = Math.ceil(par.length/2);
+  return [...par.slice(0,h), ...kids, ...par.slice(h)];
+}
 function vRels(){
   const ts = tables(), rf = S.relForm, rs = rels();
   const childFields = rf.child ? fields(rf.child).filter(f=>!f.pk) : [];
-  const box = t => `<div class="flbox" data-tbl="${esc(t)}"><div class="fh">${ico('table','#fff')}${esc(t)}</div><ul>${fields(t).map(f=>`<li data-f="${esc(f.name)}" class="${f.pk?'pk':''}">${f.pk?ico('key'):rs.some(r=>r.child===t&&r.cfield===f.name)?ico('link'):'<span style="width:15px"></span>'}${esc(f.name)}</li>`).join('')}</ul></div>`;
+  const box = t => `<div class="flbox" data-tbl="${esc(t)}"><div class="fh">${ico('table','rgba(255,255,255,.4)')}${esc(t)}</div><ul>${fields(t).map(f=>`<li data-f="${esc(f.name)}" class="${f.pk?'pk':''}">${f.pk?ico('key'):rs.some(r=>r.child===t&&r.cfield===f.name)?ico('link'):'<span style="width:15px"></span>'}${esc(f.name)}</li>`).join('')}</ul></div>`;
   return `${hint('rels')}
-   ${ts.length?`<div class="relcanvas" id="relCanvas"><svg class="rellines" id="relLines"></svg>${ts.map(box).join('')}</div>`:'<div class="empty"><span class="big">🔗</span>أنشئي الجداول أولًا.</div>'}
+   ${ts.length?`<div class="relcanvas" id="relCanvas"><svg class="rellines" id="relLines"></svg>${relOrder(ts,rs).map(box).join('')}</div>`:'<div class="empty"><span class="big">🔗</span>أنشئي الجداول أولًا.</div>'}
    ${rs.length?`<div class="relchips">${rs.map(r=>`<span class="relchip" data-rel="${r.id}">${esc(r.parent)} <b style="color:var(--c-rel)">1 ← ∞</b> ${esc(r.child)} <span class="lbl">(${esc(r.cfield)})</span>
       <button class="iconbtn ${S.armed==='l'+r.id?'armed':''}" data-act="dropRel" data-id="${r.id}" aria-label="حذف العلاقة">${S.armed==='l'+r.id?'تأكيد؟':ico('trash')}</button></span>`).join('')}</div>`:''}
    ${ts.length<2?'':`
@@ -604,7 +608,7 @@ function vQueries(){
    <div><div class="lbl" style="margin-bottom:6px">١. إظهار جدول</div><div class="formchips">${ts.map(t=>`<label class="chip"><input type="checkbox" class="qt" value="${esc(t)}" data-act="qbTables" ${B.tables.includes(t)?'checked':''}>${esc(t)}</label>`).join('') || '<span class="lbl">لا توجد جداول</span>'}</div></div>
    ${B.tables.length?`
    <div class="lbl">٢. اختاري الحقول من مربعات الجداول</div>
-   <div class="qtop">${B.tables.map(t=>`<div class="flbox"><div class="fh">${ico('table','#fff')}${esc(t)}</div><div style="padding:4px 0">${fields(t).map(f=>`<label><input type="checkbox" class="qf" data-act="qbFields" value="${esc(kOf(t,f.name))}" ${B.fields.includes(kOf(t,f.name))?'checked':''}>${f.pk?ico('key'):''}${esc(f.name)}</label>`).join('')}</div></div>`).join('')}</div>
+   <div class="qtop">${B.tables.map(t=>`<div class="flbox"><div class="fh">${ico('table','rgba(255,255,255,.4)')}${esc(t)}</div><div style="padding:4px 0">${fields(t).map(f=>`<label><input type="checkbox" class="qf" data-act="qbFields" value="${esc(kOf(t,f.name))}" ${B.fields.includes(kOf(t,f.name))?'checked':''}>${f.pk?ico('key'):''}${esc(f.name)}</label>`).join('')}</div></div>`).join('')}</div>
    ${keys.length?`<div class="lbl">٣. شبكة التصميم: اختاري الفرز، واكتبي المعايير (مثل <b dir="ltr">&gt;=3</b> أو <b>لوتس</b> أو <b>*شوكولاتة*</b>)</div>
    <div class="gridwrap"><table class="grid qbe"><tbody>
     <tr><th>الحقل</th>${keys.map(k=>`<td class="fname">${esc(JSON.parse(k)[1])}</td>`).join('')}</tr>
