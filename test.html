@@ -1,0 +1,968 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>متجر الكب كيك</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Baloo+Bhaijaan+2:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: an Access-style shell — red title bar, ribbon tabs + command groups, navigation pane (objects) beside a document workspace, status bar at the bottom. Bright cupcake accents per object type. */
+:root{
+  color-scheme:light;
+  --access:#A4373A; --access-2:#C24A4E; --access-dark:#7A2427; --access-soft:#FBEDEE;
+  --bg:#F5F1F3; --pane:#FFFFFF; --line:#E6DEE1; --line-2:#D3C8CC; --ink:#2B2326; --muted:#73686C;
+  --c-table:#2E7CD6; --c-query:#8A5CF5; --c-form:#EE8424; --c-report:#14A07A; --c-rel:#E5487F;
+  --lemon:#FFF6CC; --lemon-line:#F3DE7A; --lemon-ink:#5E4A00;
+  --ok:#14865B; --ok-bg:#E4F7EE; --err:#C2410C; --err-bg:#FFF0E6;
+  --grid-h:#F3EEF0; --grid-alt:#FCFAFB; --sel:#FDE8EF;
+  --code-bg:#2A1D22; --code-fg:#F7DCE5;
+  --f-display:"Baloo Bhaijaan 2","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans Arabic",system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  padding-top:env(safe-area-inset-top,0px);
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+html.present body{zoom:1.22}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;padding-bottom:calc(44px + env(safe-area-inset-bottom,0px))}
+[hidden]{display:none!important}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input,select,textarea{font:inherit;color:var(--ink);background:#fff;border:1px solid var(--line-2);border-radius:6px;padding:7px 10px;width:100%;min-width:0}
+textarea{resize:vertical}
+input[type=checkbox],input[type=radio]{width:auto;accent-color:var(--access)}
+:focus-visible{outline:2px solid var(--access);outline-offset:1px}
+.gut{padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px))}
+
+/* title bar */
+.titlebar{background:linear-gradient(90deg,var(--access-dark),var(--access) 60%,var(--access-2));color:#fff;display:flex;align-items:center;gap:10px;padding-block:8px}
+.logo{width:34px;height:34px;border-radius:9px;background:#fff;display:grid;place-items:center;font-size:20px;box-shadow:0 2px 0 rgba(0,0,0,.15);flex:none}
+.tb-title{min-width:0;flex:1}
+.tb-title b{font-family:var(--f-display);font-size:21px;font-weight:800;display:block;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-title span{font-size:12px;opacity:.85}
+.tb-btn{background:rgba(255,255,255,.16);color:#fff;border-radius:8px;padding:6px 10px;font-size:13px;font-weight:600;display:flex;gap:6px;align-items:center;white-space:nowrap}
+.tb-btn[aria-pressed="true"]{background:#fff;color:var(--access)}
+.tb-btn svg{width:18px;height:18px}
+
+/* student strip */
+.student{background:#fff;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center;padding-block:8px;flex-wrap:wrap}
+.student label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);flex:1 1 200px;min-width:0}
+.student label span{white-space:nowrap}
+.student input{border-radius:99px;padding:6px 14px;background:var(--grid-alt)}
+
+/* ribbon */
+.rtabs{background:#fff;display:flex;gap:2px;align-items:flex-end;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line)}
+.rtabs::-webkit-scrollbar{display:none}
+.rtab{padding:9px 14px 7px;font-weight:600;font-size:14px;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap;display:flex;gap:7px;align-items:center}
+.rtab .dot{width:9px;height:9px;border-radius:50%;background:var(--line-2)}
+.rtab.done .dot{background:var(--ok)}
+.rtab[aria-current="true"]{color:var(--access);border-bottom-color:var(--access)}
+.rtab:hover{color:var(--ink)}
+.rtab.menu{margin-inline-end:auto;color:var(--ink)}
+.ribbon{background:#fff;border-bottom:1px solid var(--line);box-shadow:0 2px 6px rgba(80,30,40,.05);display:flex;gap:0;overflow-x:auto;padding-block:6px;min-height:84px}
+.rgroup{display:flex;flex-direction:column;align-items:stretch;padding:0 8px;border-inline-start:1px solid var(--line);flex:none}
+.rgroup:first-child{border-inline-start:0;padding-inline-start:0}
+.rbtns{display:flex;gap:2px;flex:1}
+.rlabel{font-size:11px;color:var(--muted);text-align:center;padding-top:2px}
+.rbtn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 8px;border-radius:6px;font-size:12px;font-weight:500;min-width:62px;color:var(--ink)}
+.rbtn svg{width:28px;height:28px}
+.rbtn:hover{background:var(--sel)}
+.rbtn:disabled{opacity:.4;cursor:default;background:none}
+.rbtn.warn{color:var(--err)}
+
+/* body */
+.body{display:grid;grid-template-columns:250px minmax(0,1fr);gap:0;align-items:start}
+.navpane{background:#fff;border-inline-end:1px solid var(--line);min-height:calc(100vh - 220px);position:sticky;top:0;max-height:100vh;overflow:auto}
+.np-head{background:var(--access);color:#fff;font-weight:600;font-size:13px;padding:7px 12px;display:flex;justify-content:space-between;align-items:center}
+.np-group{border-bottom:1px solid var(--line)}
+.np-group h4{margin:0;font-size:12px;color:var(--muted);padding:8px 12px 2px;display:flex;gap:6px;align-items:center;font-weight:600}
+.np-item{display:flex;gap:8px;align-items:center;width:100%;text-align:start;padding:6px 12px;font-size:14px}
+.np-item svg{width:18px;height:18px;flex:none}
+.np-item:hover{background:var(--sel)}
+.np-item.on{background:var(--access-soft);color:var(--access);font-weight:600;box-shadow:inset -3px 0 0 var(--access)}
+.np-empty{font-size:12px;color:var(--muted);padding:2px 12px 8px}
+.work{min-width:0;padding:14px max(14px,env(safe-area-inset-left,0px)) 24px max(14px,env(safe-area-inset-right,0px))}
+.doctab{display:inline-flex;gap:8px;align-items:center;background:#fff;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;padding:6px 12px;font-weight:600;font-size:14px;position:relative;top:1px}
+.doctab svg{width:18px;height:18px}
+.doctab .x{color:var(--muted);font-size:18px;line-height:1;padding:0 2px}
+.doc{background:#fff;border:1px solid var(--line);border-radius:0 10px 10px 10px;padding:16px;display:flex;flex-direction:column;gap:14px;min-height:300px}
+@media (max-width:899px){
+  .body{grid-template-columns:minmax(0,1fr)}
+  .navpane{position:fixed;inset:0 auto 0 0;width:min(300px,86vw);z-index:40;box-shadow:0 0 0 100vmax rgba(30,10,15,.35);transform:translateX(-110%);transition:transform .2s;min-height:0;max-height:none}
+  html[dir=rtl] .navpane{inset:0 0 0 auto;transform:translateX(110%)}
+  .navpane.open{transform:none}
+}
+@media (min-width:900px){ .rtab.menu{display:none} }
+
+/* hint (task) bar */
+.hint{background:var(--lemon);border:1px solid var(--lemon-line);border-radius:10px;color:var(--lemon-ink)}
+.hint summary{list-style:none;cursor:pointer;display:flex;gap:10px;align-items:center;padding:9px 12px;font-weight:600}
+.hint summary::-webkit-details-marker{display:none}
+.hint .bulb{width:28px;height:28px;border-radius:50%;background:#FFD84D;display:grid;place-items:center;flex:none;font-size:15px}
+.hint .stp{font-size:12px;font-weight:500;opacity:.8}
+.hint .ok{margin-inline-start:auto;font-size:13px;color:var(--ok);background:var(--ok-bg);border-radius:99px;padding:1px 10px}
+.hint .hb{padding:0 14px 12px 14px;font-size:14px}
+.hint ul{margin:4px 0;padding-inline-start:20px}
+.hint.done{background:var(--ok-bg);border-color:#A9E3C8;color:#0F5138}
+.hint.done .bulb{background:#8EE0BD}
+
+/* common */
+h2{font-family:var(--f-display);font-size:22px;font-weight:700;margin:0;line-height:1.3}
+h3{font-size:15px;margin:0}
+.lbl{font-size:12.5px;color:var(--muted)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.grow{flex:1;min-width:0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{background:var(--access);color:#fff;font-weight:600;border-radius:8px;padding:8px 16px;display:inline-flex;gap:8px;align-items:center;justify-content:center;box-shadow:0 2px 0 var(--access-dark)}
+.btn:hover{background:var(--access-2)}
+.btn:active{transform:translateY(1px);box-shadow:none}
+.btn svg{width:18px;height:18px}
+.btn.sec{background:#fff;color:var(--ink);border:1px solid var(--line-2);box-shadow:0 1px 0 var(--line)}
+.btn.sec:hover{background:var(--sel)}
+.btn.sm{padding:4px 10px;font-size:13px;box-shadow:none}
+.btn.danger{background:var(--err-bg);color:var(--err);box-shadow:none}
+.btn:disabled{opacity:.5;cursor:default}
+.empty{padding:22px;text-align:center;color:var(--muted)}
+.empty .big{font-size:42px;display:block}
+.field{display:grid;gap:4px}
+.field>label{font-size:13px;color:var(--muted);font-weight:500}
+
+/* tiles */
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.tile{border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:8px;background:#fff;transition:transform .15s,box-shadow .15s}
+.tile:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(120,40,60,.08)}
+.tile .th{display:flex;gap:10px;align-items:center}
+.tile .ico{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;flex:none}
+.tile .ico svg{width:24px;height:24px}
+.tile b{font-size:16px}
+.tile.add{border:2px dashed var(--line-2);place-items:center;color:var(--access);font-weight:600;min-height:110px;background:var(--grid-alt)}
+.tile.add:hover{background:var(--access-soft)}
+
+/* Access grid (datasheet / design) */
+.gridwrap{overflow-x:auto;border:1px solid var(--line-2);border-radius:6px;background:#fff}
+table.grid{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+.grid th,.grid td{border:1px solid var(--line);padding:6px 10px;text-align:right;white-space:nowrap;vertical-align:middle}
+.grid thead th{background:linear-gradient(#FBF8F9,var(--grid-h));font-weight:600;color:#4A3F43;position:sticky;top:0}
+.grid tbody tr:nth-child(even) td{background:var(--grid-alt)}
+.grid tbody tr:hover td{background:var(--sel)}
+.grid .sel{width:28px;min-width:28px;padding:0;text-align:center;background:var(--grid-h)!important;color:var(--muted);font-size:12px}
+.grid tr.cur td{background:#FFF4D6!important}
+.grid tr.newrow td{color:var(--muted);cursor:pointer}
+.grid tr.newrow:hover td{background:var(--access-soft)!important;color:var(--access)}
+.grid td input,.grid td select{border:1px solid transparent;border-radius:4px;background:transparent;padding:4px 6px}
+.grid td input:focus,.grid td select:focus{border-color:var(--access);background:#fff}
+.grid .acts{display:flex;gap:4px;justify-content:flex-end}
+.iconbtn{width:30px;height:30px;border-radius:6px;display:inline-grid;place-items:center;color:var(--muted)}
+.iconbtn:hover{background:var(--sel);color:var(--access)}
+.iconbtn.armed{background:var(--err-bg);color:var(--err);width:auto;padding:0 8px;font-size:12px;font-weight:600}
+.iconbtn svg{width:17px;height:17px}
+.recbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--muted);background:var(--grid-h);border:1px solid var(--line-2);border-top:0;border-radius:0 0 6px 6px;padding:4px 8px}
+.gridwrap+.recbar{margin-top:-14px}
+.recbar b{color:var(--ink)}
+.recbar button{padding:2px 8px;border-radius:4px;font-size:13px}
+.recbar button:hover{background:#fff}
+.recbar .pos{background:#fff;border:1px solid var(--line-2);border-radius:4px;padding:1px 10px;color:var(--ink);font-weight:600}
+.key{color:#C99700}
+.fk{color:var(--c-rel)}
+.types{display:flex;flex-wrap:wrap;gap:6px;font-size:12px}
+.types span{background:var(--grid-alt);border:1px solid var(--line);border-radius:99px;padding:2px 10px}
+.sql{background:var(--code-bg);color:var(--code-fg);font-family:var(--f-mono);font-size:12.5px;border-radius:8px;padding:10px 12px;direction:ltr;text-align:left;white-space:pre;overflow-x:auto;margin:0}
+details.more>summary{cursor:pointer;color:var(--access);font-weight:600;font-size:13px;list-style:none}
+details.more>summary::-webkit-details-marker{display:none}
+details.more[open]>summary{margin-bottom:8px}
+
+/* relationships */
+.relcanvas{position:relative;border:1px solid var(--line-2);border-radius:8px;padding:28px 18px;background-color:#fff;background-image:radial-gradient(#E7DDE1 1px,transparent 1px);background-size:16px 16px;display:flex;flex-wrap:wrap;gap:56px;justify-content:center;align-items:flex-start;overflow:hidden}
+.rellines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.rellines path{fill:none;stroke:var(--c-rel);stroke-width:2.4}
+.rellines text{fill:var(--c-rel);font-weight:700;font-size:15px;font-family:var(--f-body)}
+.flbox{position:relative;z-index:1;background:#fff;border:1px solid var(--line-2);border-radius:8px;min-width:150px;box-shadow:0 4px 12px rgba(80,30,40,.08)}
+.flbox .fh{background:var(--c-table);color:#fff;font-weight:600;padding:5px 10px;border-radius:7px 7px 0 0;display:flex;gap:6px;align-items:center}
+.flbox .fh svg{width:16px;height:16px}
+.flbox ul{list-style:none;margin:0;padding:4px 0}
+.flbox li{padding:3px 12px;font-size:13.5px;display:flex;gap:6px;align-items:center}
+.flbox li.pk{font-weight:700}
+.flbox li.hl{background:#FFE3EC}
+.relchips{display:flex;flex-wrap:wrap;gap:8px}
+.relchip{display:flex;gap:8px;align-items:center;background:#FFF0F5;border:1px solid #F7C3D6;border-radius:99px;padding:4px 6px 4px 12px;font-size:13px}
+.dialog{border:1px solid var(--line-2);border-radius:10px;overflow:hidden}
+.dialog .dh{background:var(--grid-h);padding:8px 12px;font-weight:600;border-bottom:1px solid var(--line-2);display:flex;gap:8px;align-items:center}
+.dialog .db{padding:14px;display:grid;gap:12px}
+.relpick{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:end}
+.relpick .mid{font-size:22px;color:var(--c-rel);font-weight:700;padding-bottom:6px;text-align:center}
+@media (max-width:560px){.relpick{grid-template-columns:1fr}.relpick .mid{transform:rotate(-90deg)}}
+
+/* form view */
+.aform{border:1px solid var(--line-2);border-radius:10px;overflow:hidden;max-width:620px}
+.aform .fhd{background:linear-gradient(90deg,var(--c-form),#F6A94E);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:10px}
+.aform .fhd h2{color:#fff;font-size:21px}
+.aform .fhd svg{width:26px;height:26px}
+.aform .fbody{padding:16px;display:grid;gap:10px;background:#FFFCF8}
+.frow2{display:grid;grid-template-columns:140px minmax(0,1fr);gap:10px;align-items:center}
+.frow2 label{font-weight:600;font-size:14px;color:#5B4A3E;text-align:start}
+.frow2 .pkt{font-size:11px;color:#C99700;display:block;font-weight:500}
+@media (max-width:480px){.frow2{grid-template-columns:1fr;gap:3px}}
+.aform .recbar{border-radius:0;border-inline:0;border-bottom:0;margin:0}
+.formchips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line-2);border-radius:99px;padding:5px 14px;font-size:14px;background:#fff;display:inline-flex;gap:6px;align-items:center}
+.chip svg{width:16px;height:16px}
+.chip[aria-pressed="true"]{background:var(--c-form);border-color:var(--c-form);color:#fff;font-weight:600}
+.chip.q[aria-pressed="true"]{background:var(--c-query);border-color:var(--c-query)}
+
+/* query design */
+.qtop{border:1px solid var(--line-2);border-radius:8px;background-color:#FBFAFF;background-image:radial-gradient(#E4DDF5 1px,transparent 1px);background-size:16px 16px;padding:14px;display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start}
+.qtop .flbox .fh{background:var(--c-query)}
+.qtop .flbox label{display:flex;gap:7px;align-items:center;padding:3px 10px;font-size:13.5px;cursor:pointer}
+.qtop .flbox label:hover{background:#F1ECFF}
+.qbe th{background:var(--grid-h)!important;text-align:start;width:90px;color:var(--muted);font-weight:600}
+.qbe td{min-width:130px}
+.qbe td.fname{font-weight:700;color:var(--c-query)}
+.runbtn{background:linear-gradient(#D24A4E,var(--access));}
+.runbtn .bang{font-size:20px;font-weight:900;line-height:1}
+
+/* report */
+.paper{background:#fff;border:1px solid var(--line-2);border-radius:4px;box-shadow:0 6px 18px rgba(60,20,30,.08);overflow:hidden}
+.paper .rh{background:linear-gradient(90deg,var(--c-report),#3CC79A);color:#fff;padding:16px 18px}
+.paper .rh h2{color:#fff;font-size:24px}
+.paper .rh .lbl{color:#E8FFF6}
+.paper .rb{padding:16px 18px;display:grid;gap:16px}
+.grp h3{color:var(--c-report);margin-bottom:6px;font-size:16px}
+.grid tr.sum td{font-weight:700;background:#EAF8F2!important}
+.grand{border-top:2px solid var(--ink);padding-top:8px;font-weight:700;display:flex;justify-content:space-between;font-size:16px}
+.bars{display:grid;gap:8px}
+.bar{display:grid;grid-template-columns:minmax(80px,140px) minmax(0,1fr) 3.5em;gap:10px;align-items:center;font-size:14px}
+.bar .track{background:#EEF7F3;border-radius:6px;height:22px;overflow:hidden}
+.bar .fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#3CC79A,var(--c-report));transform-origin:right;animation:grow .8s ease-out both}
+.bar .v{font-weight:700;font-variant-numeric:tabular-nums}
+.bar.top .fill{background:linear-gradient(90deg,#FFB547,#F08A24)}
+@keyframes grow{from{transform:scaleX(0)}}
+
+/* worksheet */
+.wsec{border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:10px}
+.wsec h3{display:flex;gap:8px;align-items:center;font-size:16px}
+.wsec h3 .n{background:var(--access);color:#fff;border-radius:50%;width:26px;height:26px;display:grid;place-items:center;font-size:13px}
+.score{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.ring{--p:0;width:110px;height:110px;border-radius:50%;background:conic-gradient(var(--ok) calc(var(--p)*1%),#E9E1E4 0);display:grid;place-items:center;flex:none}
+.ring div{width:84px;height:84px;border-radius:50%;background:#fff;display:grid;place-items:center;text-align:center;line-height:1.1}
+.ring b{font-family:var(--f-display);font-size:28px}
+.sent{background:var(--ok-bg);color:var(--ok);border-radius:8px;padding:8px 12px;font-weight:600}
+
+/* status bar, toast, confetti */
+.statusbar{position:fixed;inset:auto 0 0 0;height:calc(40px + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);background:var(--access);color:#fff;display:flex;align-items:center;gap:12px;font-size:12.5px;z-index:30}
+.statusbar .vn{font-weight:600;white-space:nowrap}
+.statusbar .credit{opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.prog{margin-inline-start:auto;display:flex;gap:4px;align-items:center}
+.prog i{width:22px;height:7px;border-radius:4px;background:rgba(255,255,255,.3)}
+.prog i.on{background:#7CF0BE}
+.prog span{margin-inline-start:6px;font-weight:600;white-space:nowrap}
+@media (max-width:520px){.statusbar .credit{display:none}}
+#toast{position:fixed;bottom:calc(54px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%) translateY(20px);opacity:0;background:var(--ink);color:#fff;border-radius:10px;padding:10px 16px;font-weight:600;z-index:60;transition:.25s;max-width:min(92vw,520px);text-align:center;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast.ok{background:var(--ok)} #toast.err{background:var(--err)}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:70}
+#loading{padding:40px;text-align:center;color:var(--muted)}
+.scrim{position:fixed;inset:0;z-index:35}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head>
+<body>
+<header class="titlebar gut">
+  <div class="logo" aria-hidden="true">🧁</div>
+  <div class="tb-title"><b id="storeTitle">متجر الكب كيك</b><span>قاعدة بيانات · مشروع المرحلة المتوسطة</span></div>
+  <button class="tb-btn" id="presentBtn" aria-pressed="false" title="تكبير الشاشة للعرض على البروجكتر"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M12 16v4M8 20h8"/></svg><span>وضع العرض</span></button>
+</header>
+<div class="student gut">
+  <label><span>اسم الطالبة</span><input id="stuName" placeholder="اكتبي اسمك"></label>
+  <label><span>اسم متجري</span><input id="stuStore" placeholder="مثال: كب كيك سارة"></label>
+</div>
+<nav class="rtabs gut" id="rtabs" aria-label="أقسام التطبيق"></nav>
+<div class="ribbon gut" id="ribbon"></div>
+<div class="body">
+  <aside class="navpane" id="navpane" aria-label="جزء التنقل"></aside>
+  <main class="work">
+    <div id="doctab"></div>
+    <div id="loading">جارٍ تجهيز قاعدة البيانات…</div>
+    <section class="doc" id="app" hidden></section>
+  </main>
+</div>
+<footer class="statusbar gut"><span class="vn" id="viewName">جاهز</span><span class="credit">إعداد وتصميم: أ. أمل الشهري</span><div class="prog" id="prog"></div></footer>
+<div id="toast" role="status" aria-live="polite"></div>
+<canvas id="confetti"></canvas>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-asm.js"></script>
+<script>
+let SQL, db;
+const KEY = 'cupcake-db-v1';
+const S = { tab:'tables', open:null, mode:'data', designer:null, armed:null, msg:null, pane:false, showSQL:false,
+  form:{table:'', rowid:null}, qb:{tables:[], fields:[], crit:{}, sort:{key:'',dir:'ASC'}, name:''}, qsql:null, qres:null, qname:'',
+  rep:{source:'', group:'', fn:'sum', af:'', name:''}, viewRep:null, relForm:{parent:'', child:'', cfield:''} };
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = v => String(v ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const qi = n => '"' + String(n).replace(/"/g,'""') + '"';
+const latin = s => String(s).replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+const TYPES = {auto:'ترقيم تلقائي', text:'نص', int:'رقم', real:'رقم عشري', date:'تاريخ', bool:'نعم/لا'};
+const TYPEHELP = {auto:'رقم يزيد وحده', text:'حروف وكلمات', int:'رقم صحيح', real:'رقم بفاصلة', date:'يوم/شهر/سنة', bool:'نعم أو لا'};
+const SQLT = {auto:'INTEGER', text:'TEXT', int:'INTEGER', real:'REAL', date:'TEXT', bool:'INTEGER'};
+const NUMERIC = t => ['auto','int','real','bool'].includes(t);
+
+/* ---------- icons ---------- */
+const COL = {table:'var(--c-table)', query:'var(--c-query)', form:'var(--c-form)', report:'var(--c-report)', rel:'var(--c-rel)'};
+const IC = {
+  table:c=>`<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2" fill="${c}"/><path d="M3 9h18M3 14h18M9 9v11M15 9v11" stroke="#fff" stroke-width="1.6"/></svg>`,
+  design:c=>`<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2" fill="${c}"/><path d="M7 9h10M7 13h6" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><path d="M14 19l5-5 2 2-5 5h-2z" fill="#FFD84D" stroke="#7a5b00" stroke-width=".8"/></svg>`,
+  rel:c=>`<svg viewBox="0 0 24 24"><rect x="2" y="3" width="9" height="8" rx="1.5" fill="${c}"/><rect x="13" y="13" width="9" height="8" rx="1.5" fill="${c}" opacity=".75"/><path d="M11 7h3a2 2 0 0 1 2 2v4" fill="none" stroke="${c}" stroke-width="2"/></svg>`,
+  form:c=>`<svg viewBox="0 0 24 24"><rect x="4" y="2.5" width="16" height="19" rx="2" fill="${c}"/><rect x="7" y="6" width="10" height="3" rx="1" fill="#fff"/><rect x="7" y="11" width="10" height="3" rx="1" fill="#fff"/><rect x="7" y="16" width="6" height="3" rx="1" fill="#fff"/></svg>`,
+  query:c=>`<svg viewBox="0 0 24 24"><rect x="3" y="4" width="13" height="14" rx="2" fill="${c}" opacity=".35"/><circle cx="11" cy="11" r="5.5" fill="#fff" stroke="${c}" stroke-width="2.2"/><path d="M15 15l5.5 5.5" stroke="${c}" stroke-width="2.6" stroke-linecap="round"/></svg>`,
+  report:c=>`<svg viewBox="0 0 24 24"><path d="M5 2.5h10l4 4V21.5H5z" fill="${c}"/><path d="M8.5 18v-4M12 18v-7M15.5 18v-5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>`,
+  run:()=>`<svg viewBox="0 0 24 24"><path d="M12 2.5v13" stroke="#C0272D" stroke-width="4.5" stroke-linecap="round"/><circle cx="12" cy="20" r="2.4" fill="#C0272D"/></svg>`,
+  save:()=>`<svg viewBox="0 0 24 24"><path d="M4 3h13l3 3v15H4z" fill="#5B7FD6"/><rect x="7" y="3" width="9" height="6" fill="#fff"/><rect x="7" y="13" width="10" height="7" rx="1" fill="#DCE6FF"/></svg>`,
+  plus:c=>`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="${c}"/><path d="M12 7v10M7 12h10" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>`,
+  trash:()=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>`,
+  edit:()=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>`,
+  sql:()=>`<svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" fill="#2A1D22"/><text x="12" y="15.5" font-size="7.5" text-anchor="middle" fill="#F7DCE5" font-family="monospace" font-weight="700">SQL</text></svg>`,
+  example:()=>`<svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7z" fill="#FFC93C" stroke="#B88500" stroke-width=".8"/></svg>`,
+  reset:()=>`<svg viewBox="0 0 24 24" fill="none" stroke="#C2410C" stroke-width="2.2" stroke-linecap="round"><path d="M4 12a8 8 0 1 0 3-6.2"/><path d="M4 4v5h5"/></svg>`,
+  send:()=>`<svg viewBox="0 0 24 24"><path d="M3 11l18-8-6 18-3-7z" fill="#14A07A"/><path d="M12 14l9-11" stroke="#fff" stroke-width="1.3"/></svg>`,
+  sheet:()=>`<svg viewBox="0 0 24 24"><path d="M5 2.5h10l4 4V21.5H5z" fill="#A4373A"/><path d="M8 10h8M8 13.5h8M8 17h5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+  menu:()=>`<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>`,
+  key:()=>`<svg viewBox="0 0 24 24" width="15" height="15"><circle cx="8" cy="12" r="4.5" fill="none" stroke="#C99700" stroke-width="2.4"/><path d="M12.5 12H21v3M18 12v2.5" fill="none" stroke="#C99700" stroke-width="2.4"/></svg>`,
+  link:()=>`<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#E5487F" stroke-width="2.4" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.6 0l3-3a4 4 0 0 0-5.6-5.6l-1 1M14 10a4 4 0 0 0-5.6 0l-3 3a4 4 0 0 0 5.6 5.6l1-1"/></svg>`,
+};
+const ico = (n, c) => IC[n](c||COL[n]||'currentColor');
+
+/* ---------- database helpers ---------- */
+function q(sql, p=[]){ const st=db.prepare(sql); st.bind(p); const out=[]; while(st.step()) out.push(st.getAsObject()); st.free(); return out; }
+function run(sql, p=[]){ db.run(sql, p); }
+function save(){ try{ const u=db.export(); let s=''; for(let i=0;i<u.length;i+=0x8000) s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000)); localStorage.setItem(KEY,btoa(s)); }catch(e){} db.exec('PRAGMA foreign_keys=ON'); }
+function initMeta(){
+  db.exec(`CREATE TABLE IF NOT EXISTS _fields(tbl TEXT, name TEXT, type TEXT, pk INTEGER, ord INTEGER);
+    CREATE TABLE IF NOT EXISTS _relations(id INTEGER PRIMARY KEY AUTOINCREMENT, parent TEXT, pfield TEXT, child TEXT, cfield TEXT);
+    CREATE TABLE IF NOT EXISTS _queries(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, sql TEXT);
+    CREATE TABLE IF NOT EXISTS _reports(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, spec TEXT);
+    PRAGMA foreign_keys=ON;`);
+}
+const tables = () => q(`SELECT tbl, MIN(rowid) o FROM _fields GROUP BY tbl ORDER BY o`).map(r=>r.tbl);
+const fields = t => q(`SELECT * FROM _fields WHERE tbl=? ORDER BY ord`,[t]);
+const rels = () => q(`SELECT * FROM _relations ORDER BY id`);
+const pkOf = t => fields(t).find(f=>f.pk);
+const count = t => q(`SELECT COUNT(*) n FROM ${qi(t)}`)[0].n;
+const labelField = t => { const f=fields(t); return (f.find(x=>x.type==='text')||pkOf(t)||f[0]).name; };
+
+function createSQL(t, as=t){
+  const parts = fields(t).map(f => f.type==='auto' ? `${qi(f.name)} INTEGER PRIMARY KEY AUTOINCREMENT` : `${qi(f.name)} ${SQLT[f.type]}${f.pk?' PRIMARY KEY':''}`);
+  rels().filter(r=>r.child===t).forEach(r=>parts.push(`FOREIGN KEY (${qi(r.cfield)}) REFERENCES ${qi(r.parent)}(${qi(r.pfield)})`));
+  return `CREATE TABLE ${qi(as)} (\n  ${parts.join(',\n  ')}\n)`;
+}
+function rebuild(t){
+  const cols = fields(t).map(f=>qi(f.name)).join(', '), tmp = '_tmp_rebuild';
+  db.exec('PRAGMA foreign_keys=OFF');
+  try{
+    db.exec('BEGIN');
+    db.exec(`DROP TABLE IF EXISTS ${qi(tmp)}`);
+    db.exec(createSQL(t, tmp));
+    db.exec(`INSERT INTO ${qi(tmp)} (${cols}) SELECT ${cols} FROM ${qi(t)}`);
+    db.exec(`DROP TABLE ${qi(t)}`);
+    db.exec(`ALTER TABLE ${qi(tmp)} RENAME TO ${qi(t)}`);
+    db.exec('COMMIT');
+  }catch(e){ try{db.exec('ROLLBACK')}catch(_){} throw e; }
+  finally{ db.exec('PRAGMA foreign_keys=ON'); }
+}
+function createTable(name, list){
+  name = name.trim();
+  if (!name) throw new Error('اكتبي اسم الجدول');
+  if (name.startsWith('_')) throw new Error('اسم الجدول لا يبدأ بشرطة سفلية');
+  if (tables().includes(name)) throw new Error('يوجد جدول بهذا الاسم');
+  list = list.filter(f=>f.name.trim()).map(f=>({...f, name:f.name.trim()}));
+  if (!list.length) throw new Error('أضيفي حقلًا واحدًا على الأقل');
+  if (new Set(list.map(f=>f.name)).size !== list.length) throw new Error('يوجد حقلان بالاسم نفسه');
+  const autos = list.filter(f=>f.type==='auto');
+  if (autos.length > 1) throw new Error('يُسمح بحقل ترقيم تلقائي واحد فقط');
+  if (autos.length) list.forEach(f=>f.pk = f.type==='auto');
+  if (list.filter(f=>f.pk).length !== 1) throw new Error('حدّدي مفتاحًا أساسيًا واحدًا للجدول');
+  list.forEach((f,i)=>run(`INSERT INTO _fields VALUES (?,?,?,?,?)`,[name,f.name,f.type,f.pk?1:0,i]));
+  try{ db.exec(createSQL(name)); }catch(e){ run(`DELETE FROM _fields WHERE tbl=?`,[name]); throw e; }
+  return createSQL(name);
+}
+function addRelation(parent, child, cfield){
+  if (!parent || !child || !cfield) throw new Error('اختاري الجدولين والحقل');
+  if (parent===child) throw new Error('اختاري جدولين مختلفين');
+  const pk = pkOf(parent), cf = fields(child).find(f=>f.name===cfield);
+  if (cf.pk) throw new Error('اختاري حقلًا ليس المفتاح الأساسي في الجدول المرتبط');
+  if (NUMERIC(pk.type) !== NUMERIC(cf.type)) throw new Error(`نوع الحقل «${cfield}» لا يطابق نوع المفتاح «${pk.name}». اجعليه ${NUMERIC(pk.type)?'رقم':'نص'}`);
+  if (rels().some(r=>r.child===child && r.cfield===cfield)) throw new Error('هذا الحقل مرتبط مسبقًا');
+  const bad = q(`SELECT COUNT(*) n FROM ${qi(child)} WHERE ${qi(cfield)} IS NOT NULL AND ${qi(cfield)} NOT IN (SELECT ${qi(pk.name)} FROM ${qi(parent)})`)[0].n;
+  if (bad) throw new Error(`يوجد ${bad} سجل في «${child}» قيمته لا تقابل أي سجل في «${parent}». صحّحيها أولًا`);
+  run(`INSERT INTO _relations (parent,pfield,child,cfield) VALUES (?,?,?,?)`,[parent,pk.name,child,cfield]);
+  try{ rebuild(child); }catch(e){ run(`DELETE FROM _relations WHERE child=? AND cfield=?`,[child,cfield]); throw e; }
+}
+function friendly(e){
+  const m = e.message||String(e);
+  if (/FOREIGN KEY/.test(m)) return 'القيمة غير موجودة في الجدول المرتبط، أو السجل مرتبط بسجلات أخرى (تكامل البيانات)';
+  if (/UNIQUE|PRIMARY KEY/.test(m)) return 'قيمة المفتاح الأساسي مكررة. كل سجل يحتاج قيمة مختلفة';
+  if (/no such table/.test(m)) return 'الاستعلام يستخدم جدولًا غير موجود';
+  if (/no such column/.test(m)) return 'الاستعلام يستخدم حقلًا غير موجود';
+  return m;
+}
+
+/* ---------- project tasks ---------- */
+const totalRows = () => tables().reduce((s,t)=>s+count(t),0);
+const TASKS = [
+  {tab:'tables', name:'الجداول', title:'أنشئي الجداول الثلاثة', check:()=>tables().length>=3, body:`<ul>
+    <li><b>المنتجات</b>: رقم_المنتج (ترقيم تلقائي)، اسم_المنتج (نص)، السعر (رقم عشري)</li>
+    <li><b>الزبونات</b>: رقم_الزبونة (ترقيم تلقائي)، الاسم (نص)، الحي (نص)</li>
+    <li><b>الطلبات</b>: رقم_الطلب (ترقيم تلقائي)، رقم_الزبونة (رقم)، رقم_المنتج (رقم)، الكمية (رقم)</li></ul>
+    حقل الترقيم التلقائي يصبح <b>المفتاح الأساسي</b> 🔑، فلا يتكرر رقم سجلين.`},
+  {tab:'rels', name:'العلاقات', title:'اربطي الجداول بعلاقات', check:()=>rels().length>=2, body:`<ul>
+    <li>الزبونات ← الطلبات عن طريق <b>رقم_الزبونة</b></li>
+    <li>المنتجات ← الطلبات عن طريق <b>رقم_المنتج</b></li></ul>
+    علاقة <b>واحد إلى متعدد</b> (1 ← ∞): الزبونة الواحدة تطلب مرات كثيرة.`},
+  {tab:'forms', name:'النماذج', title:'أدخلي البيانات بالنماذج', check:()=>totalRows()>=10, body:`اخترعي 4 نكهات بأسعارها، وسجّلي 3 زبونات، ثم أدخلي طلبات لهن.
+    في نموذج الطلبات تختارين اسم الزبونة والنكهة من قائمة، وهذا بفضل العلاقة.`},
+  {tab:'queries', name:'الاستعلامات', title:'صمّمي استعلامًا', check:()=>q('SELECT COUNT(*) n FROM _queries')[0].n>=1, body:`أظهري الجداول الثلاثة، واختاري الحقول: الاسم، اسم_المنتج، الكمية.
+    تحت <b>الكمية</b> اكتبي في المعايير <b>&gt;=3</b> واختاري الفرز <b>تنازلي</b>. شغّليه ❗ ثم احفظيه باسم «الطلبات الكبيرة».`},
+  {tab:'reports', name:'التقارير', title:'أنشئي تقريرًا', check:()=>q('SELECT COUNT(*) n FROM _reports')[0].n>=1, body:`المصدر: جدول الطلبات. التجميع حسب: رقم_المنتج.
+    الملخص: مجموع الكمية. سمّيه «مبيعات كل نكهة»، واكتشفي النكهة الأكثر مبيعًا!`},
+];
+function hint(tab){
+  const i = TASKS.findIndex(t=>t.tab===tab), T = TASKS[i], done = T.check();
+  return `<details class="hint ${done?'done':''}" ${done?'':'open'}><summary><span class="bulb">${done?'✓':'💡'}</span><span><span class="stp">الخطوة ${i+1} من 5</span><br>${T.title}</span>${done?'<span class="ok">تمّت</span>':''}</summary><div class="hb">${T.body}</div></details>`;
+}
+const ok = t => S.msg = {text:t}, bad = t => S.msg = {text:t, err:true};
+const armed = (key, label, cls='') => S.armed===key ? `<span class="${cls}">تأكيد الحذف؟</span>` : label;
+
+/* ---------- TABLES ---------- */
+function vTables(){
+  if (S.designer) return vDesigner();
+  if (S.open) return vOpenTable();
+  const ts = tables();
+  return `${hint('tables')}
+   <div class="row"><h2 class="grow">جداول متجرك</h2><span class="lbl">${ts.length} جداول</span></div>
+   <div class="tiles">
+    ${ts.map(t=>`<div class="tile"><div class="th"><span class="ico" style="background:#E8F1FC">${ico('table')}</span><div class="grow"><b>${esc(t)}</b><div class="lbl">${fields(t).length} حقول · ${count(t)} سجلات</div></div></div>
+      <div class="row"><button class="btn sm" data-act="open" data-t="${esc(t)}">فتح</button><button class="btn sec sm" data-act="open" data-t="${esc(t)}" data-m="design">التصميم</button></div></div>`).join('')}
+    <button class="tile add" data-act="newTable">${ico('plus','var(--access)').replace('<svg','<svg width="34" height="34"')}<span>جدول جديد</span></button>
+   </div>
+   ${ts.length?'':'<div class="empty"><span class="big">🧁</span>متجرك فارغ. ابدئي بإنشاء جدول المنتجات.</div>'}`;
+}
+function vDesigner(){
+  const d = S.designer;
+  return `${hint('tables')}
+   <div class="field" style="max-width:360px"><label for="dName">اسم الجدول</label><input id="dName" value="${esc(d.name)}" placeholder="مثال: المنتجات"></div>
+   <div class="gridwrap"><table class="grid"><thead><tr><th class="sel"></th><th>اسم الحقل</th><th>نوع البيانات</th><th>مفتاح أساسي</th><th></th></tr></thead><tbody>
+    ${d.fields.map((f,i)=>`<tr class="frow" data-i="${i}"><td class="sel">${f.pk||f.type==='auto'?ico('key'):''}</td>
+      <td><input class="fn" id="fn${i}" value="${esc(f.name)}" placeholder="اسم الحقل" aria-label="اسم الحقل ${i+1}"></td>
+      <td><select class="ft" id="ft${i}" aria-label="نوع البيانات">${Object.entries(TYPES).map(([k,v])=>`<option value="${k}" ${f.type===k?'selected':''}>${v}</option>`).join('')}</select></td>
+      <td style="text-align:center"><input type="radio" name="pk" class="fp" ${f.pk?'checked':''} aria-label="مفتاح أساسي"></td>
+      <td><button class="iconbtn" data-act="rmField" data-i="${i}" aria-label="حذف الحقل">${ico('trash')}</button></td></tr>`).join('')}
+    <tr class="newrow" data-act="addField"><td class="sel">✱</td><td colspan="4"><button data-act="addField" style="width:100%;text-align:start">+ حقل جديد</button></td></tr>
+   </tbody></table></div>
+   <div class="types">${Object.entries(TYPES).map(([k,v])=>`<span><b>${v}</b>: ${TYPEHELP[k]}</span>`).join('')}</div>
+   <div class="row"><button class="btn" data-act="saveTable">${ico('save')} حفظ الجدول</button><button class="btn sec" data-act="cancelDesign">إلغاء</button></div>`;
+}
+function vOpenTable(){
+  const t = S.open, fs = fields(t), rs = rels();
+  if (S.mode==='design'){
+    return `<div class="gridwrap"><table class="grid"><thead><tr><th class="sel"></th><th>اسم الحقل</th><th>نوع البيانات</th><th>الوصف</th><th></th></tr></thead><tbody>
+      ${fs.map(f=>{ const r=rs.find(r=>r.child===t&&r.cfield===f.name), used=rs.some(x=>x.parent===t&&x.pfield===f.name);
+        return `<tr><td class="sel">${f.pk?ico('key'):r?ico('link'):''}</td><td><b>${esc(f.name)}</b></td><td>${TYPES[f.type]}</td>
+        <td class="lbl">${f.pk?'مفتاح أساسي':''}${r?`مفتاح أجنبي ← ${esc(r.parent)}`:''}</td>
+        <td>${!f.pk && !r && !used?`<button class="iconbtn ${S.armed==='f'+f.name?'armed':''}" data-act="dropField" data-f="${esc(f.name)}" aria-label="حذف الحقل">${S.armed==='f'+f.name?'تأكيد؟':ico('trash')}</button>`:''}</td></tr>`}).join('')}
+      <tr><td class="sel">✱</td><td><input id="nfName" placeholder="حقل جديد"></td><td><select id="nfType">${Object.entries(TYPES).filter(([k])=>k!=='auto').map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></td><td colspan="2"><button class="btn sm" data-act="addCol">إضافة</button></td></tr>
+      </tbody></table></div>
+      <details class="more"><summary>عرض SQL ▾</summary><pre class="sql">${esc(createSQL(t))}</pre></details>
+      <div><button class="btn danger" data-act="dropTable">${S.armed==='t'+t?'متأكدة؟ اضغطي مرة ثانية':'حذف الجدول'}</button></div>`;
+  }
+  const rows = q(`SELECT rowid AS _rid, * FROM ${qi(t)}`);
+  return `<div class="gridwrap"><table class="grid"><thead><tr><th class="sel"></th>${fs.map(f=>`<th>${f.pk?ico('key')+' ':''}${esc(f.name)}</th>`).join('')}<th></th></tr></thead><tbody>
+    ${rows.map(r=>`<tr><td class="sel">▸</td>${fs.map(f=>`<td>${f.type==='bool'?(r[f.name]?'نعم':r[f.name]===0?'لا':''):esc(r[f.name])}</td>`).join('')}
+     <td><div class="acts"><button class="iconbtn" data-act="editRow" data-r="${r._rid}" aria-label="تعديل">${ico('edit')}</button><button class="iconbtn ${S.armed==='r'+r._rid?'armed':''}" data-act="delRow" data-r="${r._rid}" aria-label="حذف">${S.armed==='r'+r._rid?'تأكيد؟':ico('trash')}</button></div></td></tr>`).join('')}
+    <tr class="newrow"><td class="sel">✱</td><td colspan="${fs.length+1}"><button data-act="toForm" style="width:100%;text-align:start">(جديد) اضغطي لإضافة سجل بالنموذج</button></td></tr>
+    </tbody></table></div>
+    <div class="recbar">السجلات: <b>${rows.length}</b></div>`;
+}
+
+/* ---------- RELATIONSHIPS ---------- */
+function vRels(){
+  const ts = tables(), rf = S.relForm, rs = rels();
+  const childFields = rf.child ? fields(rf.child).filter(f=>!f.pk) : [];
+  const box = t => `<div class="flbox" data-tbl="${esc(t)}"><div class="fh">${ico('table','#fff')}${esc(t)}</div><ul>${fields(t).map(f=>`<li data-f="${esc(f.name)}" class="${f.pk?'pk':''}">${f.pk?ico('key'):rs.some(r=>r.child===t&&r.cfield===f.name)?ico('link'):'<span style="width:15px"></span>'}${esc(f.name)}</li>`).join('')}</ul></div>`;
+  return `${hint('rels')}
+   ${ts.length?`<div class="relcanvas" id="relCanvas"><svg class="rellines" id="relLines"></svg>${ts.map(box).join('')}</div>`:'<div class="empty"><span class="big">🔗</span>أنشئي الجداول أولًا.</div>'}
+   ${rs.length?`<div class="relchips">${rs.map(r=>`<span class="relchip" data-rel="${r.id}">${esc(r.parent)} <b style="color:var(--c-rel)">1 ← ∞</b> ${esc(r.child)} <span class="lbl">(${esc(r.cfield)})</span>
+      <button class="iconbtn ${S.armed==='l'+r.id?'armed':''}" data-act="dropRel" data-id="${r.id}" aria-label="حذف العلاقة">${S.armed==='l'+r.id?'تأكيد؟':ico('trash')}</button></span>`).join('')}</div>`:''}
+   ${ts.length<2?'':`
+   <div class="dialog" id="relDialog"><div class="dh">${ico('rel').replace('<svg','<svg width="20" height="20"')} تحرير العلاقات · علاقة جديدة</div><div class="db">
+    <div class="relpick">
+     <div class="field"><label for="rParent">الجدول الأساسي (جهة 1)</label><select id="rParent" data-act="relPick"><option value="">اختاري</option>${ts.map(t=>`<option ${rf.parent===t?'selected':''}>${esc(t)}</option>`).join('')}</select></div>
+     <div class="mid">1 ← ∞</div>
+     <div class="field"><label for="rChild">الجدول المرتبط (جهة ∞)</label><select id="rChild" data-act="relPick"><option value="">اختاري</option>${ts.filter(t=>t!==rf.parent).map(t=>`<option ${rf.child===t?'selected':''}>${esc(t)}</option>`).join('')}</select></div>
+    </div>
+    ${rf.parent?`<div class="lbl">يرتبط عبر مفتاحه الأساسي ${ico('key')} <b>${esc(pkOf(rf.parent).name)}</b></div>`:''}
+    ${rf.child?`<div class="field" style="max-width:360px"><label for="rField">الحقل المقابل في «${esc(rf.child)}» (المفتاح الأجنبي)</label><select id="rField">${childFields.map(f=>`<option ${f.name===(rf.parent&&pkOf(rf.parent).name)?'selected':''}>${esc(f.name)}</option>`).join('')}</select></div>`:''}
+    <div><button class="btn" data-act="saveRel">${ico('rel','#fff').replace('<svg','<svg width="18" height="18"')} إنشاء العلاقة</button></div></div></div>`}`;
+}
+function drawRels(){
+  const cv = $('#relCanvas'), svg = $('#relLines'); if (!cv || !svg) return;
+  const base = cv.getBoundingClientRect(); let out = '';
+  rels().forEach(r => {
+    const pb = cv.querySelector(`.flbox[data-tbl="${CSS.escape(r.parent)}"]`), cb = cv.querySelector(`.flbox[data-tbl="${CSS.escape(r.child)}"]`);
+    if (!pb || !cb) return;
+    const pl = pb.querySelector(`li[data-f="${CSS.escape(r.pfield)}"]`), cl = cb.querySelector(`li[data-f="${CSS.escape(r.cfield)}"]`);
+    const P = pb.getBoundingClientRect(), C = cb.getBoundingClientRect(), pr = pl.getBoundingClientRect(), cr = cl.getBoundingClientRect();
+    const py = pr.top + pr.height/2 - base.top, cy = cr.top + cr.height/2 - base.top;
+    let x1, x2, d;
+    if (Math.abs(P.left - C.left) < 40){ // stacked vertically: loop out on the left side
+      x1 = P.left - base.left; x2 = C.left - base.left; const ox = Math.min(x1,x2) - 26;
+      d = `M${x1} ${py} C${ox} ${py} ${ox} ${cy} ${x2} ${cy}`;
+    } else {
+      const pRight = P.left > C.left; x1 = (pRight ? P.left : P.right) - base.left; x2 = (pRight ? C.right : C.left) - base.left;
+      const mx = (x1 + x2)/2; d = `M${x1} ${py} C${mx} ${py} ${mx} ${cy} ${x2} ${cy}`;
+    }
+    const lx1 = x1 + (x2 > x1 ? 10 : -16), lx2 = x2 + (x2 > x1 ? -18 : 8);
+    out += `<path d="${d}" data-rel="${r.id}"/><text x="${lx1}" y="${py-6}">1</text><text x="${lx2}" y="${cy-6}">∞</text>`;
+  });
+  svg.innerHTML = out;
+}
+addEventListener('resize', () => { if (S.tab==='rels') drawRels(); });
+
+/* ---------- FORMS ---------- */
+function vForms(){
+  const ts = tables(), F = S.form;
+  if (!ts.includes(F.table)) { F.table = ts[0]||''; F.rowid = null; }
+  if (!F.table) return `${hint('forms')}<div class="empty"><span class="big">📝</span>أنشئي جدولًا أولًا.</div>`;
+  const fs = fields(F.table), rs = rels(), ids = q(`SELECT rowid AS r FROM ${qi(F.table)} ORDER BY rowid`).map(x=>x.r);
+  const cur = F.rowid!=null ? q(`SELECT * FROM ${qi(F.table)} WHERE rowid=?`,[F.rowid])[0] : null;
+  const pos = cur ? ids.indexOf(F.rowid)+1 : 0;
+  const input = f => {
+    const v = cur ? cur[f.name] : '', id = 'ff_'+fs.indexOf(f), r = rs.find(r=>r.child===F.table&&r.cfield===f.name);
+    if (f.type==='auto') return `<input id="${id}" value="${cur?esc(v):'(جديد)'}" disabled>`;
+    if (r){ const lf = labelField(r.parent), opts = q(`SELECT ${qi(r.pfield)} k, ${qi(lf)} l FROM ${qi(r.parent)} ORDER BY ${qi(lf)}`);
+      return `<select id="${id}"><option value="">اختاري من «${esc(r.parent)}»</option>${opts.map(o=>`<option value="${esc(o.k)}" ${String(o.k)===String(v)?'selected':''}>${esc(o.l)}${lf!==r.pfield?' ('+esc(o.k)+')':''}</option>`).join('')}</select>`; }
+    if (f.type==='bool') return `<select id="${id}"><option value=""></option><option value="1" ${v===1?'selected':''}>نعم</option><option value="0" ${v===0?'selected':''}>لا</option></select>`;
+    const type = {int:'number',real:'number',date:'date'}[f.type]||'text';
+    return `<input id="${id}" type="${type}" ${f.type==='real'?'step="any"':''} ${type==='number'?'inputmode="decimal"':''} value="${esc(v)}">`;
+  };
+  return `${hint('forms')}
+   <div class="formchips">${ts.map(t=>`<button class="chip" data-act="formPick" data-t="${esc(t)}" aria-pressed="${t===F.table}">${ico('form',t===F.table?'#fff':'var(--c-form)')}نموذج ${esc(t)}</button>`).join('')}</div>
+   <div class="aform"><div class="fhd">${ico('form','#fff')}<h2 class="grow">${esc(F.table)}</h2><span style="font-size:13px">${cur?`تعديل السجل ${pos}`:'سجل جديد'}</span></div>
+    <div class="fbody">
+     ${fs.map(f=>`<div class="frow2"><label for="ff_${fs.indexOf(f)}">${esc(f.name)}${f.pk?'<span class="pkt">🔑 مفتاح أساسي</span>':''}</label>${input(f)}</div>`).join('')}
+     <div class="row" style="margin-top:4px"><button class="btn" data-act="saveRec">${ico('save')} ${cur?'حفظ التعديل':'حفظ السجل'}</button>
+      ${cur?`<button class="btn danger" data-act="delRec">${S.armed==='rec'?'متأكدة؟ اضغطي مرة ثانية':'حذف السجل'}</button>`:''}</div>
+    </div>
+    <div class="recbar">السجل:
+     <button data-act="recNav" data-d="first" ${ids.length?'':'disabled'}>الأول</button>
+     <button data-act="recNav" data-d="prev" ${ids.length?'':'disabled'}>السابق</button>
+     <span class="pos">${cur?pos:'جديد'}</span> من <b>${ids.length}</b>
+     <button data-act="recNav" data-d="next" ${ids.length?'':'disabled'}>التالي</button>
+     <button data-act="recNav" data-d="last" ${ids.length?'':'disabled'}>الأخير</button>
+     <button data-act="recNav" data-d="new" style="color:var(--access);font-weight:700">✱ جديد</button></div>
+   </div>`;
+}
+
+/* ---------- QUERIES ---------- */
+const kOf = (t,f) => JSON.stringify([t,f]);
+function parseCrit(text, ft){
+  let t = latin(text).trim(); if (!t) return null;
+  t = t.replace(/^≥/,'>=').replace(/^≤/,'<=');
+  const m = t.match(/^(>=|<=|<>|!=|=|>|<)\s*(.+)$/);
+  let op = m ? m[1] : '=', val = (m ? m[2] : t).trim().replace(/^["']|["']$/g,'');
+  if (op==='!=') op = '<>';
+  if (/[*]/.test(val)) return `LIKE '${val.replace(/'/g,"''").replace(/\*/g,'%')}'`;
+  const lit = NUMERIC(ft) && isFinite(+val) && val!=='' ? +val : `'${val.replace(/'/g,"''")}'`;
+  return `${op} ${lit}`;
+}
+function buildQuery(){
+  const B = S.qb, rs = rels();
+  if (!B.tables.length) throw new Error('أظهري جدولًا واحدًا على الأقل');
+  const keys = B.fields.filter(k=>B.tables.includes(JSON.parse(k)[0]));
+  if (!keys.length) throw new Error('اختاري الحقول من مربعات الجداول');
+  const joined = [B.tables[0]]; let from = qi(B.tables[0]); const rest = B.tables.slice(1);
+  while (rest.length){
+    const i = rest.findIndex(o => rs.some(r => (r.parent===o&&joined.includes(r.child)) || (r.child===o&&joined.includes(r.parent))));
+    if (i<0) throw new Error(`لا توجد علاقة تربط «${rest[0]}» بالجداول الأخرى. أنشئيها من شاشة العلاقات`);
+    const o = rest.splice(i,1)[0], r = rs.find(r => (r.parent===o&&joined.includes(r.child)) || (r.child===o&&joined.includes(r.parent)));
+    from += `\n  JOIN ${qi(o)} ON ${qi(r.child)}.${qi(r.cfield)} = ${qi(r.parent)}.${qi(r.pfield)}`; joined.push(o);
+  }
+  const fl = keys.map(k=>JSON.parse(k));
+  const dup = n => fl.filter(([,f])=>f===n).length>1;
+  let sql = `SELECT ${fl.map(([t,f])=>`${qi(t)}.${qi(f)}${dup(f)?` AS ${qi(t+'_'+f)}`:''}`).join(', ')}\nFROM ${from}`;
+  const where = keys.map(k=>{ const [t,f]=JSON.parse(k), c=parseCrit(B.crit[k]||'', (fields(t).find(x=>x.name===f)||{}).type); return c ? `${qi(t)}.${qi(f)} ${c}` : null; }).filter(Boolean);
+  if (where.length) sql += `\nWHERE ${where.join(' AND ')}`;
+  if (B.sort.key && keys.includes(B.sort.key)){ const [t,f] = JSON.parse(B.sort.key); sql += `\nORDER BY ${qi(t)}.${qi(f)} ${B.sort.dir}`; }
+  return sql;
+}
+function resultGrid(res){
+  if (!res) return '';
+  return `<div class="gridwrap"><table class="grid"><thead><tr><th class="sel"></th>${res.columns.map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>
+    ${res.values.map(v=>`<tr><td class="sel">▸</td>${v.map(x=>`<td>${esc(x)}</td>`).join('')}</tr>`).join('')}</tbody></table>
+    ${res.values.length?'':'<div class="empty">لا توجد سجلات تحقق المعايير</div>'}</div><div class="recbar">نتائج الاستعلام: <b>${res.values.length}</b> سجل</div>`;
+}
+function execSel(sql){ const r = db.exec(sql); const st = db.prepare(sql); const cols = st.getColumnNames(); st.free(); return r[0] || {columns:cols, values:[]}; }
+function vQueries(){
+  const ts = tables(), B = S.qb, saved = q('SELECT * FROM _queries ORDER BY id');
+  B.tables = B.tables.filter(t=>ts.includes(t));
+  const keys = B.fields.filter(k=>B.tables.includes(JSON.parse(k)[0]));
+  return `${hint('queries')}
+   ${saved.length?`<div class="formchips"><span class="lbl" style="align-self:center">المحفوظة:</span>${saved.map(s=>`<button class="chip q" data-act="runSaved" data-id="${s.id}">${ico('query')}${esc(s.name)}</button>`).join('')}</div>`:''}
+   <div class="row"><h2 class="grow">تصميم استعلام</h2></div>
+   <div><div class="lbl" style="margin-bottom:6px">١. إظهار جدول</div><div class="formchips">${ts.map(t=>`<label class="chip"><input type="checkbox" class="qt" value="${esc(t)}" data-act="qbTables" ${B.tables.includes(t)?'checked':''}>${esc(t)}</label>`).join('') || '<span class="lbl">لا توجد جداول</span>'}</div></div>
+   ${B.tables.length?`
+   <div class="lbl">٢. اختاري الحقول من مربعات الجداول</div>
+   <div class="qtop">${B.tables.map(t=>`<div class="flbox"><div class="fh">${ico('table','#fff')}${esc(t)}</div><div style="padding:4px 0">${fields(t).map(f=>`<label><input type="checkbox" class="qf" data-act="qbFields" value="${esc(kOf(t,f.name))}" ${B.fields.includes(kOf(t,f.name))?'checked':''}>${f.pk?ico('key'):''}${esc(f.name)}</label>`).join('')}</div></div>`).join('')}</div>
+   ${keys.length?`<div class="lbl">٣. شبكة التصميم: اختاري الفرز، واكتبي المعايير (مثل <b dir="ltr">&gt;=3</b> أو <b>لوتس</b> أو <b>*شوكولاتة*</b>)</div>
+   <div class="gridwrap"><table class="grid qbe"><tbody>
+    <tr><th>الحقل</th>${keys.map(k=>`<td class="fname">${esc(JSON.parse(k)[1])}</td>`).join('')}</tr>
+    <tr><th>الجدول</th>${keys.map(k=>`<td>${esc(JSON.parse(k)[0])}</td>`).join('')}</tr>
+    <tr><th>الفرز</th>${keys.map(k=>`<td><select class="qsort" data-k="${esc(k)}" aria-label="الفرز"><option value="">—</option><option value="ASC" ${B.sort.key===k&&B.sort.dir==='ASC'?'selected':''}>تصاعدي</option><option value="DESC" ${B.sort.key===k&&B.sort.dir==='DESC'?'selected':''}>تنازلي</option></select></td>`).join('')}</tr>
+    <tr><th>المعايير</th>${keys.map(k=>`<td><input class="qcrit" data-k="${esc(k)}" value="${esc(B.crit[k]||'')}" placeholder="بدون شرط" aria-label="المعايير"></td>`).join('')}</tr>
+   </tbody></table></div>
+   <div class="row"><button class="btn runbtn" data-act="runQ"><span class="bang">!</span> تشغيل</button></div>`:''}`:''}
+   ${S.qres?`<div class="row"><h3 class="grow">${ico('query').replace('<svg','<svg width="18" height="18" style="vertical-align:-3px"')} نتيجة الاستعلام${S.qname?` «${esc(S.qname)}»`:''}</h3></div>${resultGrid(S.qres)}
+    <details class="more"><summary>عرض SQL ▾</summary><pre class="sql">${esc(S.qsql)}</pre></details>
+    ${S.qname?'':`<div class="dialog"><div class="dh">${ico('save').replace('<svg','<svg width="18" height="18"')} حفظ الاستعلام</div><div class="db"><div class="row"><input id="qName" class="grow" placeholder="اسم الاستعلام، مثل: الطلبات الكبيرة" value="${esc(B.name)}"><button class="btn" data-act="saveQ">حفظ</button></div></div></div>`}`:''}`;
+}
+
+/* ---------- REPORTS ---------- */
+function sourceSQL(src){
+  if (!src) return null;
+  if (src.startsWith('t:')){
+    const t = src.slice(2), rs = rels();
+    if (!tables().includes(t)) return null;
+    const cols = fields(t).map(f => { const r = rs.find(r=>r.child===t&&r.cfield===f.name);
+      return r ? `(SELECT ${qi(labelField(r.parent))} FROM ${qi(r.parent)} p WHERE p.${qi(r.pfield)} = x.${qi(f.name)}) AS ${qi(f.name)}` : `x.${qi(f.name)}`; });
+    return `SELECT ${cols.join(', ')} FROM ${qi(t)} x`;
+  }
+  const r = q('SELECT sql FROM _queries WHERE id=?',[+src.slice(2)])[0]; return r ? r.sql : null;
+}
+const FN = {sum:'المجموع', avg:'المتوسط', count:'العدد', max:'الأعلى', min:'الأدنى'};
+function agg(rows, fn, f){
+  if (fn==='count') return rows.length;
+  const n = rows.map(r=>r[f]).filter(v=>v!==null&&v!==''&&isFinite(+v)).map(Number);
+  if (!n.length) return '—';
+  const v = fn==='avg'? n.reduce((a,b)=>a+b,0)/n.length : fn==='sum'? n.reduce((a,b)=>a+b,0) : fn==='max'? Math.max(...n) : Math.min(...n);
+  return Math.round(v*100)/100;
+}
+function vReportPaper(rep){
+  const sp = JSON.parse(rep.spec), sql = sourceSQL(sp.source);
+  if (!sql) return `<div class="empty">مصدر التقرير لم يعد موجودًا.</div>`;
+  let res; try{ res = execSel(sql); }catch(e){ return `<div class="empty">${esc(friendly(e))}</div>`; }
+  const rows = res.values.map(v=>Object.fromEntries(res.columns.map((c,i)=>[c,v[i]])));
+  const cols = res.columns.filter(c=>c!==sp.group);
+  const tbl = (rs, foot) => `<div class="gridwrap"><table class="grid"><thead><tr>${cols.map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>
+    ${rs.map(r=>`<tr>${cols.map(c=>`<td>${esc(r[c])}</td>`).join('')}</tr>`).join('')}
+    ${foot?`<tr class="sum"><td colspan="${cols.length}">${FN[sp.fn]}${sp.fn!=='count'?' '+esc(sp.af):''}: ${agg(rs,sp.fn,sp.af)}</td></tr>`:''}</tbody></table></div>`;
+  let body = '', chart = '';
+  if (sp.group && res.columns.includes(sp.group)){
+    const g = new Map(); rows.forEach(r=>{ const k=r[sp.group]??'(بدون قيمة)'; if(!g.has(k)) g.set(k,[]); g.get(k).push(r); });
+    const groups = [...g.entries()].sort((a,b)=>String(a[0]).localeCompare(String(b[0]),'ar'));
+    body = groups.map(([k,rs])=>`<div class="grp"><h3>${esc(sp.group)}: ${esc(k)}</h3>${tbl(rs,true)}</div>`).join('');
+    const vals = groups.map(([k,rs])=>[k, agg(rs,sp.fn,sp.af)]).filter(([,v])=>typeof v==='number').sort((a,b)=>b[1]-a[1]);
+    const mx = Math.max(...vals.map(v=>v[1]), 1);
+    if (vals.length) chart = `<div><h3 style="margin-bottom:8px">📊 ${FN[sp.fn]} ${sp.fn!=='count'?esc(sp.af):''} حسب ${esc(sp.group)}</h3><div class="bars">${vals.map(([k,v],i)=>`<div class="bar ${i===0?'top':''}"><span>${i===0?'🏆 ':''}${esc(k)}</span><div class="track"><div class="fill" style="width:${Math.max(4,v/mx*100)}%"></div></div><span class="v">${v}</span></div>`).join('')}</div></div>`;
+  } else body = tbl(rows,false);
+  const srcName = sp.source.startsWith('t:') ? 'جدول '+sp.source.slice(2) : 'استعلام '+((q('SELECT name FROM _queries WHERE id=?',[+sp.source.slice(2)])[0]||{}).name||'');
+  return `<div class="paper"><div class="rh"><div class="lbl">${esc(who.store||'متجر الكب كيك')}${who.name?' · إعداد الطالبة: '+esc(who.name):''}</div><h2>${esc(rep.name)}</h2><div class="lbl">المصدر: ${esc(srcName)} · ${new Date().toLocaleDateString('ar-SA',{dateStyle:'long'})} · ${rows.length} سجل</div></div>
+    <div class="rb">${chart}${body}<div class="grand"><span>الإجمالي · ${FN[sp.fn]}${sp.fn!=='count'?' '+esc(sp.af):''}</span><span>${agg(rows,sp.fn,sp.af)}</span></div></div></div>`;
+}
+function vReports(){
+  if (S.viewRep){ const r = q('SELECT * FROM _reports WHERE id=?',[S.viewRep])[0]; if (r) return vReportPaper(r); S.viewRep=null; }
+  const R = S.rep, ts = tables(), qs = q('SELECT id,name FROM _queries ORDER BY id'), reps = q('SELECT * FROM _reports ORDER BY id');
+  let cols = []; const sql = sourceSQL(R.source);
+  if (sql){ try{ const st=db.prepare(sql); cols=st.getColumnNames(); st.free(); }catch(e){} }
+  return `${hint('reports')}
+   ${reps.length?`<div class="tiles">${reps.map(r=>`<div class="tile"><div class="th"><span class="ico" style="background:#E3F6EF">${ico('report')}</span><b class="grow">${esc(r.name)}</b></div>
+     <div class="row"><button class="btn sm" data-act="viewRep" data-id="${r.id}">عرض</button><button class="btn danger sm" data-act="dropRep" data-id="${r.id}">${S.armed==='p'+r.id?'تأكيد؟':'حذف'}</button></div></div>`).join('')}</div>`:''}
+   <div class="dialog"><div class="dh">${ico('report').replace('<svg','<svg width="20" height="20"')} معالج التقارير</div><div class="db">
+    <div class="field"><label for="rpSrc">١. المصدر</label><select id="rpSrc" data-act="repPick"><option value="">اختاري جدولًا أو استعلامًا</option>
+     ${ts.length?`<optgroup label="الجداول">${ts.map(t=>`<option value="t:${esc(t)}" ${R.source==='t:'+t?'selected':''}>${esc(t)}</option>`).join('')}</optgroup>`:''}
+     ${qs.length?`<optgroup label="الاستعلامات">${qs.map(s=>`<option value="q:${s.id}" ${R.source==='q:'+s.id?'selected':''}>${esc(s.name)}</option>`).join('')}</optgroup>`:''}</select></div>
+    ${cols.length?`
+    <div class="field"><label for="rpGroup">٢. التجميع حسب</label><select id="rpGroup"><option value="">بدون تجميع</option>${cols.map(c=>`<option ${R.group===c?'selected':''}>${esc(c)}</option>`).join('')}</select></div>
+    <div class="two"><div class="field"><label for="rpFn">٣. الملخص</label><select id="rpFn">${Object.entries(FN).map(([k,v])=>`<option value="${k}" ${R.fn===k?'selected':''}>${v}</option>`).join('')}</select></div>
+     <div class="field"><label for="rpAf">للحقل</label><select id="rpAf">${cols.map(c=>`<option ${R.af===c?'selected':''}>${esc(c)}</option>`).join('')}</select></div></div>
+    <div class="field"><label for="rpName">٤. عنوان التقرير</label><input id="rpName" value="${esc(R.name)}" placeholder="مثال: مبيعات كل نكهة"></div>
+    <div><button class="btn" data-act="saveRep">${ico('report','#fff').replace('<svg','<svg width="18" height="18"')} إنشاء التقرير</button></div>`:''}</div></div>`;
+}
+
+/* ---------- WORKSHEET & SEND ---------- */
+let ans = {};
+try{ ans = Object.assign(ans, JSON.parse(localStorage.getItem('cupcake-answers')||'{}')); }catch(e){}
+function autoScore(){
+  const ts = tables(), allF = ts.flatMap(fields), rs = rels();
+  const qs = q('SELECT sql FROM _queries'), rp = q('SELECT spec FROM _reports').map(r=>JSON.parse(r.spec));
+  const rows = totalRows();
+  const parts = [
+    ['الجداول', Math.min(2,ts.length>=3?2:ts.length>=1?1:0) + (allF.length>=10?1:0) + (allF.some(f=>!f.pk&&(f.type==='real'||f.type==='int'))?1:0), 4],
+    ['العلاقات', Math.min(2, rs.length), 2],
+    ['النماذج والبيانات', (rows>=7?1:0) + (rows>=13?1:0), 2],
+    ['الاستعلام', Math.min(3, (qs.length?1:0) + (qs.some(x=>/JOIN/.test(x.sql))?1:0) + (qs.some(x=>/WHERE/.test(x.sql))?1:0)), 3],
+    ['التقرير', (rp.length?2:0) + (rp.some(x=>x.group)?1:0), 3],
+  ];
+  return {parts, total: parts.reduce((a,p)=>a+p[1],0)};
+}
+function summaryText(sc){
+  return [`الطالبة: ${who.name||'—'} · المتجر: ${who.store||'—'}`,
+    ...sc.parts.map(p=>`${p[0]}: ${p[1]} من ${p[2]}`), `درجة التطبيق: ${sc.total} من 14`,
+    `الصف: ${ans.grade||''} ${ans.cls||''}`, `النكهات: ${[1,2,3,4].map(i=>(ans['p'+i+'n']||'')+' '+(ans['p'+i+'p']||'')).join('، ')}`,
+    `الحقل المشترك للمنتجات: ${ans.r2||''}`, `النماذج: ${ans.a0||''}`, `استعلامي: ${ans.mq1||''} / ${ans.mq2||''} / ${ans.mq3||''}`,
+    `النكهة الأكثر مبيعًا: ${ans.best||''}`, `1) ${ans.a1||''}`, `2) ${ans.a2||''}`, `3) ${ans.a3||''}`].join('\n');
+}
+const fld = (k, ph='', w='') => `<input class="ans" id="w_${k}" data-k="${k}" value="${esc(ans[k]||'')}" placeholder="${ph}" aria-label="${ph||k}" ${w}>`;
+const ta = (k, label) => `<div class="field"><label for="w_${k}">${label}</label><textarea class="ans" id="w_${k}" data-k="${k}" rows="2">${esc(ans[k]||'')}</textarea></div>`;
+const GFORM = 'https://docs.google.com/forms/d/e/1FAIpQLSf1h7RFR5SfpGeBulsAp_-9lxmcHWkmbRMFxkJTk4aBZ4J_Ww/formResponse';
+let gsending = false, gSent = null;
+try{ gSent = localStorage.getItem('cupcake-gsent'); }catch(e){}
+function vSend(){
+  const sc = autoScore(), pct = Math.round(sc.total/14*100);
+  const sec = (n,t,body) => `<div class="wsec"><h3><span class="n">${n}</span>${t}</h3>${body}</div>`;
+  const grid = (head, rows) => `<div class="gridwrap"><table class="grid"><thead><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  return `<div class="row"><h2 class="grow">ورقة العمل</h2><span class="lbl">إجاباتك تُحفظ تلقائيًا</span></div>
+   ${who.name?'':'<div class="hint"><summary style="cursor:default"><span class="bulb">✎</span>اكتبي اسمك واسم متجرك في أعلى الشاشة أولًا</summary></div>'}
+   <div class="two">${fld('grade','الصف')}${fld('cls','الفصل')}</div>
+   ${sec('1','الجداول: خطّطي لمتجرك',`<div class="lbl">اخترعي 4 نكهات بأسعارها و3 زبونات، ثم أدخليها في التطبيق من «النماذج».</div>
+     ${grid(['رقم_المنتج','اسم_المنتج','السعر (ريال)'],[1,2,3,4].map(i=>[i,fld('p'+i+'n','النكهة'),fld('p'+i+'p','السعر','inputmode="decimal"')]))}
+     ${grid(['رقم_الزبونة','الاسم','الحي'],[1,2,3].map(i=>[i,fld('c'+i+'n','الاسم'),fld('c'+i+'h','الحي')]))}`)}
+   ${sec('2','العلاقات',grid(['الجدول الأساسي','الجدول المرتبط','الحقل المشترك'],[['الزبونات','الطلبات','رقم_الزبونة'],['المنتجات','الطلبات',fld('r2','أكملي')]]))}
+   ${sec('3','النماذج',ta('a0','لماذا يظهر في نموذج الطلبات اسم الزبونة بدل رقمها؟'))}
+   ${sec('4','الاستعلام',`<div class="lbl">صمّمي استعلامًا من اختيارك واحفظيه، ثم اكتبي وصفه.</div>
+     ${grid(['اسم الاستعلام','المعايير','عدد النتائج'],[[fld('mq1','الاسم'),fld('mq2','المعايير'),fld('mq3','العدد','inputmode="numeric"')]])}`)}
+   ${sec('5','التقرير',`<div class="lbl">انقلي النتيجة من تقرير «مبيعات كل نكهة».</div>
+     ${grid(['النكهة','مجموع الكمية'],[1,2,3,4].map(i=>[fld('t'+i+'a','النكهة'),fld('t'+i+'b','الكمية','inputmode="numeric"')]))}
+     <div class="field"><label for="w_best">النكهة الأكثر مبيعًا في متجري</label>${fld('best')}</div>`)}
+   ${sec('؟','أسئلة التفكير',ta('a1','1. لماذا لا يسمح التطبيق بتسجيل طلب لزبونة غير موجودة؟')+ta('a2','2. ما الفرق بين الاستعلام والتقرير؟')+ta('a3','3. اقترحي جدولًا رابعًا لمتجرك واذكري حقوله.'))}
+   <div class="wsec" style="border-color:var(--access);background:var(--access-soft)"><h3><span class="n">✓</span>الإرسال للمعلمة</h3>
+    <div class="score"><div class="ring" style="--p:${pct}"><div><b>${sc.total}</b><span class="lbl">من 14</span></div></div>
+     <div class="grow" style="min-width:200px">${grid(['المهارة','الدرجة'],sc.parts.map(p=>[p[0],`${p[1]} من ${p[2]}`]))}</div></div>
+    <div class="lbl">ورقة العمل وأسئلة التفكير من 6 درجات تصححها المعلمة.</div>
+    <div class="row"><button class="btn" data-act="gsend" ${gsending?'disabled':''}>${ico('send').replace('<svg','<svg style="filter:brightness(4)"')} ${gsending?'جارٍ الإرسال…':(gSent?'إرسال التحديث للمعلمة':'إرسال للمعلمة')}</button></div>
+    ${gSent?`<div class="sent">✓ وصل عملك للمعلمة ${new Date(gSent).toLocaleString('ar-SA',{dateStyle:'medium',timeStyle:'short'})}. إذا عدّلتِ شيئًا أرسليه مرة ثانية.</div>`:''}
+    <details class="more"><summary>مشكلة في الإرسال؟ انسخي الملخص ▾</summary><div style="display:grid;gap:8px"><button class="btn sec sm" data-act="copySum">نسخ الملخص</button><pre class="sql" id="sumBox" style="direction:rtl;text-align:right;white-space:pre-wrap">${esc(summaryText(sc))}</pre></div></details>
+   </div>`;
+}
+
+/* ---------- shell: ribbon, nav pane, doc tab, status ---------- */
+const TABS = [['tables','الجداول','table'],['rels','العلاقات','rel'],['forms','النماذج','form'],['queries','الاستعلامات','query'],['reports','التقارير','report'],['send','ورقة العمل','sheet']];
+function rbtn(icon, text, attrs='', cls=''){ return `<button class="rbtn ${cls}" ${attrs}>${icon}<span>${text}</span></button>`; }
+function group(label, btns){ return `<div class="rgroup"><div class="rbtns">${btns.join('')}</div><div class="rlabel">${label}</div></div>`; }
+function ribbon(){
+  const t = S.tab;
+  if (t==='tables'){
+    const g = [group('إنشاء',[rbtn(ico('table'),'جدول جديد','data-act="newTable"')])];
+    if (S.open) g.push(group('طرق العرض',[rbtn(ico('table'),'ورقة البيانات','data-act="mode" data-m="data"'), rbtn(ico('design','var(--c-table)'),'التصميم','data-act="mode" data-m="design"')]),
+      group('السجلات',[rbtn(ico('plus','var(--c-form)'),'سجل جديد','data-act="toForm"')]));
+    g.push(group('أدوات المعلمة',[rbtn(ico('example'), S.armed==='example'?'تأكيد؟':'مثال مكتمل','data-act="example"'), rbtn(ico('reset'), S.armed==='reset'?'تأكيد المسح؟':'البدء من جديد','data-act="reset"','warn')]));
+    return g.join('');
+  }
+  if (t==='rels') return group('العلاقات',[rbtn(ico('rel'),'علاقة جديدة','data-act="focusRel"')]);
+  if (t==='forms') return group('السجلات',[rbtn(ico('plus','var(--c-form)'),'جديد','data-act="recNav" data-d="new"'), rbtn(ico('save'),'حفظ','data-act="saveRec"')])
+    + group('التنقل',[rbtn('<svg viewBox="0 0 24 24" fill="none" stroke="var(--c-form)" stroke-width="2.6" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>','السابق','data-act="recNav" data-d="prev"'), rbtn('<svg viewBox="0 0 24 24" fill="none" stroke="var(--c-form)" stroke-width="2.6" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>','التالي','data-act="recNav" data-d="next"')]);
+  if (t==='queries') return group('النتائج',[rbtn(ico('run'),'تشغيل','data-act="runQ"'), rbtn(ico('sql'),'عرض SQL','data-act="toggleSQL"', '')])
+    + group('استعلام',[rbtn(ico('plus','var(--c-query)'),'استعلام جديد','data-act="newQuery"')]);
+  if (t==='reports') return group('التقارير',[rbtn(ico('report'),'تقرير جديد','data-act="closeRep"')]);
+  if (t==='send') return group('ورقة العمل',[rbtn(ico('send'),'إرسال للمعلمة','data-act="gsend"')]);
+  return '';
+}
+function navpane(){
+  const ts = tables(), qs = q('SELECT id,name FROM _queries ORDER BY id'), rp = q('SELECT id,name FROM _reports ORDER BY id');
+  const item = (on, icon, text, attrs) => `<button class="np-item ${on?'on':''}" ${attrs}>${icon}${esc(text)}</button>`;
+  const grp = (title, icon, items, empty) => `<div class="np-group"><h4>${icon.replace('<svg','<svg width="14" height="14"')}${title}</h4>${items.length?items.join(''):`<div class="np-empty">${empty}</div>`}</div>`;
+  return `<div class="np-head"><span>كل كائنات قاعدة البيانات</span><button class="np-x" data-act="pane" aria-label="إغلاق" style="color:#fff;font-size:20px;line-height:1">×</button></div>
+   ${grp('الجداول', ico('table'), ts.map(t=>item(S.tab==='tables'&&S.open===t, ico('table'), t, `data-act="open" data-t="${esc(t)}"`)), 'لا توجد جداول')}
+   ${grp('الاستعلامات', ico('query'), qs.map(s=>item(S.tab==='queries'&&S.qname===s.name, ico('query'), s.name, `data-act="runSaved" data-id="${s.id}"`)), 'لا توجد استعلامات')}
+   ${grp('النماذج', ico('form'), ts.map(t=>item(S.tab==='forms'&&S.form.table===t, ico('form'), 'نموذج '+t, `data-act="formPick" data-t="${esc(t)}"`)), 'لا توجد نماذج')}
+   ${grp('التقارير', ico('report'), rp.map(r=>item(S.tab==='reports'&&S.viewRep===r.id, ico('report'), r.name, `data-act="viewRep" data-id="${r.id}"`)), 'لا توجد تقارير')}
+   ${grp('العلاقات', ico('rel'), [item(S.tab==='rels', ico('rel'), 'العلاقات', 'data-tab="rels"')], '')}`;
+}
+function docTab(){
+  const t = S.tab; let icon, name, closable = false;
+  if (t==='tables'){ if (S.designer){ icon=ico('design','var(--c-table)'); name='جدول جديد : تصميم'; closable=true; }
+    else if (S.open){ icon=ico(S.mode==='design'?'design':'table','var(--c-table)'); name=S.open+(S.mode==='design'?' : تصميم':''); closable=true; }
+    else { icon=ico('table'); name='الجداول'; } }
+  if (t==='rels'){ icon=ico('rel'); name='العلاقات'; }
+  if (t==='forms'){ icon=ico('form'); name=S.form.table?'نموذج '+S.form.table:'النماذج'; }
+  if (t==='queries'){ icon=ico('query'); name=S.qname||'استعلام جديد'; }
+  if (t==='reports'){ icon=ico('report'); name=S.viewRep?((q('SELECT name FROM _reports WHERE id=?',[S.viewRep])[0]||{}).name||'تقرير'):'التقارير'; closable=!!S.viewRep; }
+  if (t==='send'){ icon=ico('sheet'); name='ورقة العمل'; }
+  return `<div class="doctab">${icon}<span>${esc(name)}</span>${closable?`<button class="x" data-act="closeDoc" aria-label="إغلاق">×</button>`:''}</div>`;
+}
+function viewName(){
+  const t = S.tab;
+  if (t==='tables') return S.designer||S.mode==='design'&&S.open ? 'عرض التصميم' : S.open ? 'عرض ورقة البيانات' : 'الجداول';
+  return {rels:'العلاقات', forms:'عرض النموذج', queries: S.qres?'عرض ورقة البيانات':'عرض التصميم', reports: S.viewRep?'معاينة التقرير':'معالج التقارير', send:'ورقة العمل'}[t];
+}
+
+/* ---------- toast & confetti ---------- */
+let toastT;
+function toast(text, kind){ const t=$('#toast'); t.textContent=text; t.className='show '+(kind||''); clearTimeout(toastT); toastT=setTimeout(()=>t.className='',2600); }
+function confetti(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const cv=$('#confetti'), cx=cv.getContext('2d'); cv.width=innerWidth; cv.height=innerHeight;
+  const cols=['#FF5C93','#FFC93C','#22C3A6','#3DA5F4','#9B7BFF','#A4373A'];
+  const P=Array.from({length:140},()=>({x:innerWidth/2+(Math.random()-.5)*120,y:innerHeight*.35,vx:(Math.random()-.5)*12,vy:-Math.random()*11-4,s:Math.random()*7+4,c:cols[Math.random()*cols.length|0],r:Math.random()*6,vr:(Math.random()-.5)*.3}));
+  let f=0; (function tick(){ cx.clearRect(0,0,cv.width,cv.height);
+    P.forEach(p=>{p.vy+=.32;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;cx.fillRect(-p.s/2,-p.s/3,p.s,p.s*.66);cx.restore();});
+    if (++f<120) requestAnimationFrame(tick); else cx.clearRect(0,0,cv.width,cv.height); })();
+}
+
+/* ---------- render & events ---------- */
+let prevDone = null;
+function render(){
+  const views = {tables:vTables, rels:vRels, forms:vForms, queries:vQueries, reports:vReports, send:vSend};
+  try{ $('#app').innerHTML = views[S.tab](); }catch(e){ $('#app').innerHTML = `<div class="empty">${esc(friendly(e))}</div>`; }
+  const done = TASKS.map(t=>t.check());
+  $('#rtabs').innerHTML = `<button class="rtab menu" data-act="pane" aria-label="جزء التنقل">${ico('menu')}الكائنات</button>` + TABS.map(([k,n],i)=>`<button class="rtab ${i<5&&done[i]?'done':''}" data-tab="${k}" aria-current="${S.tab===k}">${i<5?'<span class="dot"></span>':''}${n}</button>`).join('');
+  $('#ribbon').innerHTML = ribbon();
+  $('#navpane').innerHTML = navpane(); $('#navpane').classList.toggle('open', S.pane);
+  $('#doctab').innerHTML = docTab();
+  $('#viewName').textContent = viewName();
+  const n = done.filter(Boolean).length;
+  $('#prog').innerHTML = TASKS.map((t,i)=>`<i class="${done[i]?'on':''}" title="${t.name}"></i>`).join('') + `<span>${n} من 5</span>`;
+  if (S.msg){ toast(S.msg.text, S.msg.err?'err':'ok'); S.msg = null; }
+  if (prevDone){ const i = done.findIndex((d,j)=>d && !prevDone[j]); if (i>=0){ confetti(); toast(`🎉 أحسنتِ! أنهيتِ خطوة ${TASKS[i].name}`, 'ok'); } }
+  prevDone = done;
+  if (S.tab==='rels') requestAnimationFrame(drawRels);
+  if (S.showSQL) $$('details.more').forEach(d=>{ if (d.querySelector('.sql')) d.open = true; });
+}
+function syncDesigner(){
+  const d = S.designer; if (!d || !$('#dName')) return;
+  d.name = $('#dName').value;
+  d.fields = $$('.frow').map(r=>({name:r.querySelector('.fn').value, type:r.querySelector('.ft').value, pk:r.querySelector('.fp').checked}));
+}
+function syncQB(){
+  const B = S.qb;
+  if ($$('.qt').length) B.tables = $$('.qt').filter(x=>x.checked).map(x=>x.value);
+  const shown = new Set($$('.qf').map(x=>x.value));
+  B.fields = B.fields.filter(k=>!shown.has(k)).concat($$('.qf').filter(x=>x.checked).map(x=>x.value)).filter((k,i,a)=>a.indexOf(k)===i);
+  $$('.qcrit').forEach(x=>{ B.crit[x.dataset.k] = x.value; });
+  const s = $$('.qsort').find(x=>x.value); if ($$('.qsort').length) B.sort = s ? {key:s.dataset.k, dir:s.value} : {key:'', dir:'ASC'};
+  if ($('#qName')) B.name = $('#qName').value;
+}
+function syncRep(){ const R=S.rep; if($('#rpSrc')) R.source=$('#rpSrc').value; if($('#rpGroup')){ R.group=$('#rpGroup').value; R.fn=$('#rpFn').value; R.af=$('#rpAf').value; R.name=$('#rpName').value; } }
+
+document.addEventListener('change', e => {
+  const a = e.target.dataset.act;
+  if (a==='relPick'){ S.relForm.parent=$('#rParent').value; S.relForm.child=$('#rChild').value; if(S.relForm.child===S.relForm.parent) S.relForm.child=''; render(); }
+  if (a==='qbTables' || a==='qbFields'){ syncQB(); S.qsql=null; S.qres=null; S.qname=''; render(); }
+  if (e.target.classList.contains('qsort')){ $$('.qsort').forEach(x=>{ if (x!==e.target) x.value=''; }); }
+  if (a==='repPick'){ syncRep(); S.rep.group=''; S.rep.af=''; render(); }
+});
+document.addEventListener('input', e => {
+  if (e.target.classList.contains('ans')){ ans[e.target.dataset.k] = e.target.value; try{ localStorage.setItem('cupcake-answers', JSON.stringify(ans)); }catch(_){} }
+});
+document.addEventListener('click', e => {
+  const b = e.target.closest('button,[data-act].newrow'); if (!b) return;
+  if (b.dataset.tab){ S.tab=b.dataset.tab; S.armed=null; S.viewRep=null; S.pane=false; render(); scrollTo(0,0); return; }
+  const a = b.dataset.act; if (!a) return;
+  const wasArmed = S.armed; S.armed = null;
+  const arm = k => { if (wasArmed===k) return true; S.armed=k; render(); return false; };
+  if (S.tab==='queries' && a!=='newQuery') syncQB();
+  try{ actions[a] && actions[a](b.dataset, arm); }catch(err){ bad(friendly(err)); }
+  if (a!=='gsend') render();
+});
+
+const actions = {
+  pane(){ S.pane = !S.pane; },
+  newTable(){ S.tab='tables'; S.open=null; S.designer={name:'', fields:[{name:'', type:'auto', pk:true},{name:'', type:'text', pk:false}]}; },
+  addField(){ syncDesigner(); S.designer.fields.push({name:'',type:'text',pk:false}); },
+  rmField(d){ syncDesigner(); S.designer.fields.splice(+d.i,1); },
+  cancelDesign(){ S.designer=null; },
+  saveTable(){ syncDesigner(); const n=S.designer.name.trim(); createTable(S.designer.name, S.designer.fields); save(); S.designer=null; ok(`أُنشئ جدول «${n}» 🎉`); },
+  open(d){ S.tab='tables'; S.designer=null; S.open=d.t; S.mode=d.m||'data'; S.pane=false; },
+  closeDoc(){ if (S.tab==='reports'){ S.viewRep=null; return; } S.open=null; S.designer=null; },
+  mode(d){ S.mode=d.m; },
+  addCol(){ const n=$('#nfName').value.trim(), t=$('#nfType').value;
+    if(!n) throw new Error('اكتبي اسم الحقل'); if(fields(S.open).some(f=>f.name===n)) throw new Error('يوجد حقل بهذا الاسم');
+    db.exec(`ALTER TABLE ${qi(S.open)} ADD COLUMN ${qi(n)} ${SQLT[t]}`);
+    run(`INSERT INTO _fields VALUES (?,?,?,0,(SELECT MAX(ord)+1 FROM _fields WHERE tbl=?))`,[S.open,n,t,S.open]); save(); ok(`أُضيف الحقل «${n}»`); },
+  dropField(d,arm){ if(!arm('f'+d.f)) return; run(`DELETE FROM _fields WHERE tbl=? AND name=?`,[S.open,d.f]); rebuild(S.open); save(); ok('حُذف الحقل'); },
+  dropTable(d,arm){ const t=S.open; if(!arm('t'+t)) return;
+    if (rels().some(r=>r.parent===t)) throw new Error('هذا الجدول أساسي في علاقة. احذفي العلاقة أولًا');
+    run(`DELETE FROM _relations WHERE child=?`,[t]); run(`DELETE FROM _fields WHERE tbl=?`,[t]); db.exec(`DROP TABLE ${qi(t)}`); save(); S.open=null; ok(`حُذف جدول «${t}»`); },
+  delRow(d,arm){ if(!arm('r'+d.r)) return; run(`DELETE FROM ${qi(S.open)} WHERE rowid=?`,[+d.r]); save(); ok('حُذف السجل'); },
+  editRow(d){ S.form={table:S.open,rowid:+d.r}; S.tab='forms'; },
+  toForm(){ S.form={table:S.open||S.form.table,rowid:null}; S.tab='forms'; },
+  example(d,arm){ if(!arm('example')) return; loadExample(); ok('حُمّل المثال المكتمل ⭐'); },
+  reset(d,arm){ if(!arm('reset')) return; db.close(); db=new SQL.Database(); initMeta(); save(); Object.assign(S,{open:null,designer:null,qsql:null,qres:null,qname:'',viewRep:null}); prevDone=null; ok('قاعدة بيانات فارغة جاهزة'); },
+  focusRel(){ setTimeout(()=>{ const el=$('#rParent'); if(el){ el.scrollIntoView({behavior:'smooth',block:'center'}); el.focus(); } }); },
+  saveRel(){ addRelation($('#rParent').value, $('#rChild').value, $('#rField')&&$('#rField').value); save(); S.relForm={parent:'',child:'',cfield:''}; ok('أُنشئت العلاقة 🔗'); },
+  dropRel(d,arm){ if(!arm('l'+d.id)) return; const r=q('SELECT * FROM _relations WHERE id=?',[+d.id])[0]; run('DELETE FROM _relations WHERE id=?',[+d.id]); rebuild(r.child); save(); ok('حُذفت العلاقة'); },
+  formPick(d){ S.tab='forms'; S.form={table:d.t,rowid:null}; S.pane=false; },
+  saveRec(){ const F=S.form; if(!F.table||!$('#ff_0')) return; const fs=fields(F.table).filter(f=>f.type!=='auto');
+    const vals = fs.map(f=>{ const v=latin($('#ff_'+fields(F.table).findIndex(x=>x.name===f.name)).value.trim()); return v===''?null:(NUMERIC(f.type)?Number(v):v); });
+    if (vals.every(v=>v===null)) throw new Error('النموذج فارغ');
+    const pk = fs.find(f=>f.pk); if (pk && vals[fs.indexOf(pk)]===null) throw new Error(`اكتبي قيمة المفتاح الأساسي «${pk.name}»`);
+    if (F.rowid!=null){ run(`UPDATE ${qi(F.table)} SET ${fs.map(f=>qi(f.name)+'=?').join(', ')} WHERE rowid=?`,[...vals,F.rowid]); ok('حُفظ التعديل ✓'); }
+    else { run(`INSERT INTO ${qi(F.table)} (${fs.map(f=>qi(f.name)).join(', ')}) VALUES (${fs.map(()=>'?').join(', ')})`,vals); F.rowid=null; ok('حُفظ السجل ✓ النموذج جاهز لسجل جديد'); }
+    save(); },
+  recNav(d){ const F=S.form; if(!F.table) return; const ids=q(`SELECT rowid r FROM ${qi(F.table)} ORDER BY rowid`).map(x=>x.r); const i=ids.indexOf(F.rowid);
+    if(d.d==='new') F.rowid=null; else if(d.d==='first') F.rowid=ids[0]??null; else if(d.d==='last') F.rowid=ids[ids.length-1]??null;
+    else if(d.d==='next') F.rowid = i<0? (ids[0]??null) : (ids[Math.min(i+1,ids.length-1)]);
+    else F.rowid = i<0? (ids[ids.length-1]??null) : ids[Math.max(i-1,0)]; },
+  delRec(d,arm){ if(!arm('rec')) return; run(`DELETE FROM ${qi(S.form.table)} WHERE rowid=?`,[S.form.rowid]); save(); S.form.rowid=null; ok('حُذف السجل'); },
+  newQuery(){ S.qb={tables:[], fields:[], crit:{}, sort:{key:'',dir:'ASC'}, name:''}; S.qsql=null; S.qres=null; S.qname=''; },
+  runQ(){ S.tab='queries'; S.qsql=null; S.qres=null; S.qname=''; S.qsql=buildQuery(); S.qres=execSel(S.qsql); ok(`تم التشغيل: ${S.qres.values.length} سجل`); },
+  toggleSQL(){ S.showSQL=!S.showSQL; if(!S.qres) bad('شغّلي الاستعلام أولًا لرؤية جملة SQL'); },
+  saveQ(){ const n=S.qb.name.trim(); if(!n) throw new Error('اكتبي اسمًا للاستعلام'); run('INSERT INTO _queries (name,sql) VALUES (?,?)',[n,S.qsql]); save(); S.qname=n; S.qb.name=''; ok(`حُفظ استعلام «${n}» ✓`); },
+  runSaved(d){ const s=q('SELECT * FROM _queries WHERE id=?',[+d.id])[0]; S.tab='queries'; S.pane=false; S.qsql=s.sql; S.qres=null; S.qres=execSel(s.sql); S.qname=s.name; },
+  saveRep(){ syncRep(); const R=S.rep; if(!R.name.trim()) throw new Error('اكتبي عنوان التقرير');
+    run('INSERT INTO _reports (name,spec) VALUES (?,?)',[R.name.trim(),JSON.stringify({source:R.source,group:R.group,fn:R.fn,af:R.af})]);
+    save(); S.viewRep=q('SELECT MAX(id) m FROM _reports')[0].m; S.rep={source:'',group:'',fn:'sum',af:'',name:''}; },
+  viewRep(d){ S.tab='reports'; S.viewRep=+d.id; S.pane=false; scrollTo(0,0); },
+  closeRep(){ S.viewRep=null; },
+  dropRep(d,arm){ if(!arm('p'+d.id)) return; run('DELETE FROM _reports WHERE id=?',[+d.id]); save(); ok('حُذف التقرير'); },
+  async gsend(){
+    if (!who.name){ bad('اكتبي اسمك واسم متجرك في أعلى الشاشة أولًا'); render(); return; }
+    S.tab='send'; const sc = autoScore(); gsending = true; render();
+    const body = new URLSearchParams({
+      'entry.83625409': who.name, 'entry.729501137': who.store||'',
+      'entry.639285482': [ans.grade||'', ans.cls||''].join(' ').trim(), 'entry.454392716': String(sc.total),
+      'entry.565127560': ans.best||'', 'entry.259363418': summaryText(sc) });
+    try{
+      await fetch(GFORM, {method:'POST', mode:'no-cors', body});
+      gSent = new Date().toISOString(); try{ localStorage.setItem('cupcake-gsent', gSent); }catch(e){}
+      ok('وصل عملك للمعلمة ✓'); confetti();
+    }catch(err){ bad('ما وصل الإرسال. تأكدي من الإنترنت وحاولي مرة ثانية، أو انسخي الملخص وأرسليه للمعلمة.'); }
+    gsending = false; render();
+  },
+  copySum(){
+    const t = summaryText(autoScore());
+    navigator.clipboard.writeText(t).then(()=>toast('نُسخ الملخص','ok')).catch(()=>{ const r=document.createRange(); r.selectNodeContents($('#sumBox')); const s=getSelection(); s.removeAllRanges(); s.addRange(r); });
+  },
+};
+
+function loadExample(){
+  db.close(); db = new SQL.Database(); initMeta();
+  createTable('المنتجات',[{name:'رقم_المنتج',type:'auto'},{name:'اسم_المنتج',type:'text'},{name:'السعر',type:'real'}]);
+  createTable('الزبونات',[{name:'رقم_الزبونة',type:'auto'},{name:'الاسم',type:'text'},{name:'الحي',type:'text'}]);
+  createTable('الطلبات',[{name:'رقم_الطلب',type:'auto'},{name:'رقم_الزبونة',type:'int'},{name:'رقم_المنتج',type:'int'},{name:'الكمية',type:'int'}]);
+  addRelation('الزبونات','الطلبات','رقم_الزبونة'); addRelation('المنتجات','الطلبات','رقم_المنتج');
+  db.exec(`INSERT INTO "المنتجات" ("اسم_المنتج","السعر") VALUES ('فانيلا بالفراولة',8),('شوكولاتة مزدوجة',10),('ريد فلفت',12),('لوتس',11.5);
+    INSERT INTO "الزبونات" ("الاسم","الحي") VALUES ('جود','النرجس'),('رهف','الياسمين'),('ليان','الملقا');
+    INSERT INTO "الطلبات" ("رقم_الزبونة","رقم_المنتج","الكمية") VALUES (1,2,6),(1,4,2),(2,3,4),(2,1,1),(3,4,5),(3,2,3),(1,3,1),(2,4,3);`);
+  const qty = kOf('الطلبات','الكمية');
+  S.qb = {tables:['الطلبات','الزبونات','المنتجات'], fields:[kOf('الزبونات','الاسم'),kOf('المنتجات','اسم_المنتج'),qty], crit:{[qty]:'>=3'}, sort:{key:qty, dir:'DESC'}, name:''};
+  run('INSERT INTO _queries (name,sql) VALUES (?,?)',['الطلبات الكبيرة', buildQuery()]);
+  run('INSERT INTO _reports (name,spec) VALUES (?,?)',['مبيعات كل نكهة', JSON.stringify({source:'t:الطلبات',group:'رقم_المنتج',fn:'sum',af:'الكمية'})]);
+  save(); Object.assign(S,{open:null,designer:null,qsql:null,qres:null,qname:'',viewRep:null});
+}
+
+let who = {name:'', store:''};
+try{ who = Object.assign(who, JSON.parse(localStorage.getItem('cupcake-student')||'{}')); }catch(e){}
+function showWho(){ $('#storeTitle').textContent = who.store || 'متجر الكب كيك'; document.title = (who.store||'متجر الكب كيك'); }
+$('#stuName').value = who.name; $('#stuStore').value = who.store; showWho();
+['stuName','stuStore'].forEach(id => $('#'+id).addEventListener('input', () => {
+  who.name = $('#stuName').value.trim(); who.store = $('#stuStore').value.trim(); showWho();
+  try{ localStorage.setItem('cupcake-student', JSON.stringify(who)); }catch(e){}
+}));
+let present = false; try{ present = localStorage.getItem('cupcake-present')==='1'; }catch(e){}
+function applyPresent(){ document.documentElement.classList.toggle('present', present); $('#presentBtn').setAttribute('aria-pressed', present); if (S.tab==='rels') requestAnimationFrame(drawRels); }
+$('#presentBtn').addEventListener('click', () => { present = !present; try{ localStorage.setItem('cupcake-present', present?'1':'0'); }catch(e){} applyPresent(); });
+applyPresent();
+
+initSqlJs().then(s => {
+  SQL = s; let saved = null;
+  try{ saved = localStorage.getItem(KEY); }catch(e){}
+  if (saved){ try{ const b=atob(saved), u=new Uint8Array(b.length); for(let i=0;i<b.length;i++) u[i]=b.charCodeAt(i); db=new SQL.Database(u); }catch(e){ db=null; } }
+  if (!db){ db = new SQL.Database(); }
+  initMeta(); save();
+  $('#loading').hidden = true; $('#app').hidden = false; render();
+}).catch(e => { $('#loading').textContent = 'تعذّر تحميل محرك قاعدة البيانات: ' + e.message; });
+</script>
+<div style="text-align:center;font-size:12px;color:var(--muted);padding:6px 0 4px">إعداد وتصميم: أ. أمل الشهري</div>
+</body></html>
