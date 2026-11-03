@@ -1,0 +1,167 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>لوحة المعلمة · متجر الكب كيك</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Reem+Kufi:wght@600;700&display=swap">
+<style>
+:root{--bg:#f5f3f4;--surface:#fff;--ink:#2a1d23;--muted:#6f6067;--line:#e2dadd;--accent:#9a2f55;--accent-ink:#fff;--soft:#f3e6eb;--ok:#2f7a4f;--ok-bg:#e5f3ea;--warn:#b4530a;--warn-bg:#fdf0e3;
+ --f-display:"Reem Kufi","IBM Plex Sans Arabic",system-ui,sans-serif;--f-body:"IBM Plex Sans Arabic",system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#151012;--surface:#1f181b;--ink:#f0e6ea;--muted:#a9979e;--line:#3a2e33;--accent:#e77fa3;--accent-ink:#1d0d14;--soft:#33222a;--ok:#7fd3a0;--ok-bg:#183323;--warn:#f0a65a;--warn-bg:#33240f;color-scheme:dark}}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;padding:16px max(16px,env(safe-area-inset-right)) 40px max(16px,env(safe-area-inset-left))}
+.wrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+h1{font-family:var(--f-display);font-size:26px;margin:0}
+h2{font-family:var(--f-display);font-size:19px;margin:0}
+.lbl{font-size:13px;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:10px}
+textarea,input{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%;min-width:0}
+textarea{min-height:120px}
+textarea:focus,input:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+button{font:inherit;font-weight:600;border:0;border-radius:10px;padding:9px 14px;cursor:pointer;background:var(--accent);color:var(--accent-ink)}
+button.ghost{background:var(--soft);color:var(--ink);font-weight:500}
+button.small{padding:5px 10px;font-size:13px}
+button.danger{background:var(--warn-bg);color:var(--warn)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.msg{font-size:14px;color:var(--ok)} .msg.err{color:var(--warn)}
+.tablebox{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap;vertical-align:middle}
+th{background:var(--soft);color:var(--muted);font-weight:600}
+td input{width:4.5em;padding:5px 8px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.stat b{display:block;font-family:var(--f-display);font-size:24px}
+details.stu{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+details.stu summary{cursor:pointer;font-weight:600}
+.ans{font-size:14px;color:var(--muted);white-space:pre-wrap;margin-top:6px}
+.empty{padding:18px;text-align:center;color:var(--muted)}
+.credit{text-align:center;font-size:12px;color:var(--muted)}
+</style></head><body>
+<div class="wrap">
+  <header><h1>لوحة المعلمة 🧁</h1><div class="lbl">متجر الكب كيك · تجمعين هنا ملخصات الطالبات وتصححينها وتختارين المتميزات.</div></header>
+
+  <div class="card">
+    <h2>١. أضيفي ملخصات الطالبات</h2>
+    <div class="lbl">انسخي ملخص الطالبة من الواتساب والصقيه هنا. تقدرين تلصقين أكثر من ملخص مرة واحدة.</div>
+    <textarea id="paste" placeholder="الطالبة: سارة · المتجر: كب كيك سارة&#10;الجداول: 4 من 4&#10;..."></textarea>
+    <div class="row"><button id="addBtn">إضافة</button><span id="addMsg"></span></div>
+  </div>
+
+  <div id="board"></div>
+
+  <div class="card">
+    <h2>٣. شاركي لوحة المتميزات</h2>
+    <div class="lbl">اختاري المتميزات بزر ☆ في الجدول، ثم انسخي الرابط وأرسليه للطالبات. اللوحة تعرض اسم المتجر والطالبة ونكهاتها فقط، بدون الدرجات.</div>
+    <div class="row"><button id="honorBtn">نسخ رابط لوحة المتميزات</button><a id="honorOpen" href="#" target="_blank" rel="noopener">فتح اللوحة</a></div>
+    <input id="honorLink" readonly aria-label="رابط لوحة المتميزات" hidden>
+    <div id="honorMsg"></div>
+  </div>
+
+  <div class="card">
+    <h2>كشف الدرجات</h2>
+    <div class="row"><button class="ghost" id="csvBtn">نسخ كشف الدرجات (للصقه في Excel)</button><button class="danger small" id="clearBtn">مسح كل البيانات</button></div>
+    <div id="csvMsg"></div>
+  </div>
+  <div class="credit">إعداد وتصميم: أ. أمل الشهري</div>
+</div>
+
+<script>
+const KEY='cupcake-teacher-v1';
+let list=[]; try{ list=JSON.parse(localStorage.getItem(KEY)||'[]'); }catch(e){}
+let armed=false;
+const $=s=>document.querySelector(s);
+const esc=v=>String(v??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const save=()=>{ try{ localStorage.setItem(KEY,JSON.stringify(list)); }catch(e){} };
+const toLatin=s=>String(s).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+
+function parse(text){
+  const out=[];
+  const chunks=toLatin(text).split(/(?=الطالبة\s*:)/).filter(c=>/الطالبة\s*:/.test(c));
+  for(const c of chunks){
+    const lines=c.split('\n').map(l=>l.trim()).filter(Boolean);
+    const get=re=>{ for(const l of lines){ const m=l.match(re); if(m) return m[1].trim(); } return ''; };
+    const head=lines[0]||'';
+    const m=head.match(/الطالبة\s*:\s*(.*?)\s*·\s*المتجر\s*:\s*(.*)$/);
+    const s={ name:m?m[1].trim():head.replace(/الطالبة\s*:/,'').trim(), store:m?m[2].trim():'',
+      parts:{}, app:null, think:null, featured:false,
+      grade:get(/^الصف\s*:\s*(.*)$/), flavors:get(/^النكهات\s*:\s*(.*)$/), r2:get(/^الحقل المشترك للمنتجات\s*:\s*(.*)$/),
+      forms:get(/^النماذج\s*:\s*(.*)$/), query:get(/^استعلامي\s*:\s*(.*)$/), best:get(/^النكهة الأكثر مبيعًا\s*:\s*(.*)$/),
+      a1:get(/^1\)\s*(.*)$/), a2:get(/^2\)\s*(.*)$/), a3:get(/^3\)\s*(.*)$/) };
+    for(const p of ['الجداول','العلاقات','النماذج والبيانات','الاستعلام','التقرير']){
+      const v=get(new RegExp('^'+p+'\\s*:\\s*(\\d+)\\s*من\\s*\\d+')); if(v!=='') s.parts[p]=+v; }
+    const app=get(/^درجة التطبيق\s*:\s*(\d+)\s*من/); s.app=app===''?null:+app;
+    if(s.name) out.push(s);
+  }
+  return out;
+}
+
+function render(){
+  const n=list.length, graded=list.filter(s=>s.think!=null&&s.app!=null);
+  const avg=graded.length?Math.round(graded.reduce((a,s)=>a+s.app+s.think,0)/graded.length*10)/10:'—';
+  $('#board').innerHTML=`<div class="card"><h2>٢. تابعي وصححي</h2>
+    <div class="stats"><div class="stat"><b>${n}</b><span class="lbl">طالبة أرسلت</span></div>
+      <div class="stat"><b>${avg}</b><span class="lbl">متوسط الدرجة من 20</span></div>
+      <div class="stat"><b>${list.filter(s=>s.featured).length}</b><span class="lbl">متميزة</span></div></div>
+    ${n?`<div class="lbl">اكتبي درجة ورقة العمل من 6 بعد قراءة إجاباتها. الدرجات تُحفظ على هذا الجهاز.</div>
+    <div class="tablebox"><table><thead><tr><th>الطالبة</th><th>المتجر</th><th>التطبيق /14</th><th>الورقة /6</th><th>المجموع /20</th><th>متميزة</th><th></th></tr></thead><tbody>
+    ${list.map((s,i)=>`<tr><td>${esc(s.name)}<div class="lbl">${esc(s.grade)}</div></td><td>${esc(s.store)}</td><td>${s.app??'—'}</td>
+      <td><input type="number" min="0" max="6" inputmode="numeric" data-think="${i}" value="${s.think??''}" aria-label="درجة الورقة"></td>
+      <td><b>${s.app!=null&&s.think!=null?s.app+s.think:'—'}</b></td>
+      <td><button class="small ${s.featured?'':'ghost'}" data-star="${i}" aria-pressed="${s.featured}">${s.featured?'⭐ متميزة':'☆ اختيار'}</button></td>
+      <td><button class="small danger" data-del="${i}">حذف</button></td></tr>`).join('')}
+    </tbody></table></div>
+    <h2 style="font-size:16px">إجابات الطالبات</h2>
+    ${list.map(s=>`<details class="stu"><summary>${esc(s.name)} · ${esc(s.store)}</summary><div class="ans">${esc(
+      `الدرجات: ${Object.entries(s.parts).map(([k,v])=>k+' '+v).join('، ')}
+النكهات: ${s.flavors}
+الحقل المشترك للمنتجات: ${s.r2}
+النماذج: ${s.forms}
+استعلامها: ${s.query}
+الأكثر مبيعًا: ${s.best}
+1) ${s.a1}
+2) ${s.a2}
+3) ${s.a3}`)}</div></details>`).join('')}`
+    :'<div class="empty">لم تُضيفي أي ملخص بعد. الصقي ملخصات الطالبات في الخانة الأولى.</div>'}</div>`;
+}
+
+$('#addBtn').onclick=()=>{
+  const found=parse($('#paste').value); const m=$('#addMsg');
+  if(!found.length){ m.className='msg err'; m.textContent='لم أجد ملخصًا. تأكدي أن النص يبدأ بـ «الطالبة:» كما نسخته الطالبة من التطبيق.'; return; }
+  let added=0, updated=0;
+  for(const s of found){ const i=list.findIndex(x=>x.name===s.name&&x.store===s.store);
+    if(i>=0){ s.think=list[i].think; s.featured=list[i].featured; list[i]=s; updated++; } else { list.push(s); added++; } }
+  list.sort((a,b)=>a.name.localeCompare(b.name,'ar')); save(); render();
+  $('#paste').value=''; m.className='msg'; m.textContent=`أُضيفت ${added}${updated?` وتحدّثت ${updated}`:''}`;
+};
+document.addEventListener('change',e=>{ const i=e.target.dataset.think; if(i==null) return;
+  const v=e.target.value===''?null:Math.max(0,Math.min(6,Math.round(+e.target.value))); list[+i].think=v; save(); setTimeout(render); });
+document.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return;
+  if(b.dataset.star!=null){ const s=list[+b.dataset.star]; s.featured=!s.featured; save(); render(); }
+  if(b.dataset.del!=null){ list.splice(+b.dataset.del,1); save(); render(); }
+});
+
+function honorURL(){
+  const data=list.filter(s=>s.featured).map(s=>({n:s.name,s:s.store,f:s.flavors,b:s.best}));
+  const bytes=new TextEncoder().encode(JSON.stringify(data)); let bin=''; bytes.forEach(x=>bin+=String.fromCharCode(x));
+  const code=btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  return new URL('honor.html#'+code, location.href).href;
+}
+function copy(text, msgEl, done, input){
+  const ok=()=>{ msgEl.className='msg'; msgEl.textContent=done; };
+  (navigator.clipboard?navigator.clipboard.writeText(text):Promise.reject()).then(ok).catch(()=>{
+    if(input){ input.hidden=false; input.value=text; input.select(); }
+    msgEl.className='msg err'; msgEl.textContent='حدّدي النص وانسخيه يدويًا.'; });
+}
+$('#honorBtn').onclick=()=>{ const m=$('#honorMsg');
+  if(!list.some(s=>s.featured)){ m.className='msg err'; m.textContent='اختاري متميزة واحدة على الأقل بزر ☆ في الجدول.'; return; }
+  const u=honorURL(); $('#honorOpen').href=u; copy(u,m,'نُسخ الرابط. الصقيه في مجموعة الطالبات.',$('#honorLink')); };
+$('#honorOpen').onclick=e=>{ e.currentTarget.href=honorURL(); };
+$('#csvBtn').onclick=()=>{
+  const rows=[['الطالبة','الصف','المتجر','التطبيق من 14','الورقة من 6','المجموع من 20','متميزة']]
+    .concat(list.map(s=>[s.name,s.grade,s.store,s.app??'',s.think??'',s.app!=null&&s.think!=null?s.app+s.think:'',s.featured?'نعم':'']));
+  copy(rows.map(r=>r.join('\t')).join('\n'),$('#csvMsg'),'نُسخ الكشف. الصقيه في خلية A1 في Excel.'); };
+$('#clearBtn').onclick=()=>{ const b=$('#clearBtn');
+  if(!armed){ armed=true; b.textContent='متأكدة؟ اضغطي مرة ثانية'; setTimeout(()=>{ armed=false; b.textContent='مسح كل البيانات'; },4000); return; }
+  list=[]; save(); render(); armed=false; b.textContent='مسح كل البيانات'; };
+render();
+</script>
+</body></html>

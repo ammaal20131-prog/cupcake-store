@@ -1,0 +1,46 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>المتميزات · متجر الكب كيك</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Reem+Kufi:wght@600;700&display=swap">
+<style>
+:root{--bg:#f5f3f4;--surface:#fff;--ink:#2a1d23;--muted:#6f6067;--line:#e2dadd;--accent:#9a2f55;--accent-ink:#fff;--soft:#f3e6eb;--gold:#b7811c;
+ --f-display:"Reem Kufi","IBM Plex Sans Arabic",system-ui,sans-serif;--f-body:"IBM Plex Sans Arabic",system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#151012;--surface:#1f181b;--ink:#f0e6ea;--muted:#a9979e;--line:#3a2e33;--accent:#e77fa3;--accent-ink:#1d0d14;--soft:#33222a;--gold:#f0c35a;color-scheme:dark}}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;padding:16px max(16px,env(safe-area-inset-right)) 40px max(16px,env(safe-area-inset-left))}
+.wrap{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.hero{background:var(--accent);color:var(--accent-ink);border-radius:18px;padding:22px 18px;text-align:center}
+.hero h1{font-family:var(--f-display);font-size:30px;margin:0}
+.hero p{margin:4px 0 0;opacity:.92}
+.store{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:grid;gap:6px}
+.store .top{display:flex;align-items:center;gap:10px}
+.star{font-size:26px;color:var(--gold)}
+.store h2{font-family:var(--f-display);font-size:21px;margin:0}
+.by{color:var(--muted);font-size:14px}
+.k{font-size:13px;color:var(--muted)}
+.best{background:var(--soft);border-radius:10px;padding:6px 10px;font-size:14px}
+.empty{padding:24px;text-align:center;color:var(--muted);background:var(--surface);border-radius:16px}
+.app{display:block;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;color:var(--accent);font-weight:600;text-decoration:none}
+.credit{text-align:center;font-size:12px;color:var(--muted)}
+</style></head><body>
+<div class="wrap">
+  <div class="hero"><h1>⭐ المتميزات</h1><p>أفضل متاجر الكب كيك في مشروع قواعد البيانات</p></div>
+  <div id="list"></div>
+  <a class="app" href="./">افتحي تطبيق متجر الكب كيك</a>
+  <div class="credit">إعداد وتصميم: أ. أمل الشهري</div>
+</div>
+<script>
+const esc=v=>String(v??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function load(){
+  let data=[];
+  try{ const c=location.hash.slice(1).replace(/-/g,'+').replace(/_/g,'/'); const bin=atob(c); data=JSON.parse(new TextDecoder().decode(Uint8Array.from(bin,ch=>ch.charCodeAt(0)))); }catch(e){}
+  const el=document.getElementById('list');
+  el.innerHTML = Array.isArray(data)&&data.length ? `<div style="display:grid;gap:12px">${data.map(s=>`<div class="store">
+      <div class="top"><span class="star" aria-hidden="true">★</span><div><h2>${esc(s.s||'متجر بلا اسم')}</h2><div class="by">${esc(s.n)}</div></div></div>
+      ${s.f?`<div><span class="k">النكهات:</span> ${esc(s.f)}</div>`:''}
+      ${s.b?`<div class="best">🧁 الأكثر مبيعًا: <b>${esc(s.b)}</b></div>`:''}</div>`).join('')}</div>`
+    : '<div class="empty">لم تُعلن المعلمة المتميزات بعد. انتظري رابط اللوحة منها.</div>';
+}
+window.addEventListener('hashchange',load); load();
+</script>
+</body></html>

@@ -15,3 +15,6 @@
 **دليل الطالبة بالصور:** https://ammaal20131-prog.github.io/cupcake-store/guide.pdf
 
 البيانات تُحفظ على جهاز كل طالبة فقط.
+
+**لوحة المعلمة:** https://ammaal20131-prog.github.io/cupcake-store/teacher.html
+(تلصق المعلمة ملخصات الطالبات، وتصحح، وتختار المتميزات، ثم تنسخ رابط لوحة المتميزات للطالبات)
