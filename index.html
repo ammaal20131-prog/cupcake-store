@@ -609,8 +609,9 @@ function vSend(){
     <div class="lbl">أسئلة التفكير وورقة العمل من 6، تصححها المعلمة.</div>
     ${cdb && myId ? `<button data-act="submit" ${sending?'disabled':''}>${sending?'جارٍ الإرسال…':mySub?'إرسال التحديث':'إرسال للمعلمة'}</button>
        ${mySub?`<div class="msg">وصل عملك للمعلمة ${new Date(mySub.sentAt).toLocaleString('ar-SA',{dateStyle:'medium',timeStyle:'short'})}. يمكنك الإرسال مرة أخرى بعد أي تعديل.</div>`:''}`
-     : `<div class="lbl">الإرسال المباشر غير متاح على هذا الجهاز. انسخي الملخص وأرسليه للمعلمة في قناة الفصل.</div>
-       <button data-act="copySum">نسخ الملخص</button><pre class="sql" id="sumBox" style="direction:rtl;text-align:right;white-space:pre-wrap">${esc(summaryText(sc))}</pre>`}
+     : `<button data-act="gsend" ${gsending?'disabled':''}>${gsending?'جارٍ الإرسال…':(gSent?'إرسال التحديث للمعلمة':'إرسال للمعلمة')}</button>
+       ${gSent?`<div class="msg">✓ وصل عملك للمعلمة ${new Date(gSent).toLocaleString('ar-SA',{dateStyle:'medium',timeStyle:'short'})}. إذا عدّلتِ شيئًا أرسليه مرة ثانية.</div>`:''}
+       <details><summary class="lbl" style="cursor:pointer">مشكلة في الإرسال؟ انسخي الملخص</summary><div style="display:grid;gap:8px;margin-top:8px"><button class="small ghost" data-act="copySum">نسخ الملخص</button><pre class="sql" id="sumBox" style="direction:rtl;text-align:right;white-space:pre-wrap">${esc(summaryText(sc))}</pre></div></details>`}
     ${msgHTML()}</div>`;
 }
 function wsDetails(r){
@@ -674,6 +675,23 @@ actions.submit = async () => {
 actions.feature = async d => {
   const r = (subs||[]).find(x=>x.id===d.id); if (!r) return;
   try{ await cdb.collection('submissions').doc(d.id).update({featured:!r.featured}); }catch(e){ bad('تعذّر الحفظ'); render(); }
+};
+const GFORM = 'https://docs.google.com/forms/d/e/1FAIpQLSf1h7RFR5SfpGeBulsAp_-9lxmcHWkmbRMFxkJTk4aBZ4J_Ww/formResponse';
+let gsending = false, gSent = null;
+try{ gSent = localStorage.getItem('cupcake-gsent'); }catch(e){}
+actions.gsend = async () => {
+  if (!who.name){ bad('اكتبي اسمك واسم متجرك في أعلى الشاشة أولًا'); return; }
+  const sc = autoScore(); gsending = true; render();
+  const body = new URLSearchParams({
+    'entry.83625409': who.name, 'entry.729501137': who.store||'',
+    'entry.639285482': [ans.grade||'', ans.cls||''].join(' ').trim(), 'entry.454392716': String(sc.total),
+    'entry.565127560': ans.best||'', 'entry.259363418': summaryText(sc) });
+  try{
+    await fetch(GFORM, {method:'POST', mode:'no-cors', body});
+    gSent = new Date().toISOString(); try{ localStorage.setItem('cupcake-gsent', gSent); }catch(e){}
+    ok('وصل عملك للمعلمة ✓');
+  }catch(err){ bad('ما وصل الإرسال. تأكدي من الإنترنت وحاولي مرة ثانية، أو انسخي الملخص وأرسليه للمعلمة.'); }
+  gsending = false; render();
 };
 actions.copySum = () => {
   const t = summaryText(autoScore());
